@@ -9,9 +9,11 @@ const Users = () => {
   };
 
   const renderPhrase = (number) => {
-    return number === 1 || number > 4
-      ? `${number} человек туcанет с тобой сегодня`
-      : `${number} человекa туcанут с тобой сегодня`;
+    if (number > 4 && number < 15) return "Человек тусанет";
+    const lastNumber = Number(number.toString().slice(-1));
+    if ([2, 3, 4].indexOf(lastNumber) >= 0) return "Человека тусанут";
+    if (lastNumber === 1) return "Человек тусанет";
+    return "Человек тусанет";
   };
 
   const provideColor = (color) => {
@@ -64,20 +66,16 @@ const Users = () => {
 
   return (
     <>
-      {users.length !== 0 ? (
-        <>
-          <h1>
-            <span className="badge bg-primary">
-              {renderPhrase(users.length)}
-            </span>
-          </h1>
-          <table className="table">{renderTable()}</table>
-        </>
-      ) : (
-        <h1>
-          <span className="badge bg-danger">Никто с тобой не тусанет</span>
-        </h1>
-      )}
+      <h2>
+        <span
+          className={"badge bg-" + (users.length > 0 ? "primary" : "danger")}
+        >
+          {users.length > 0
+            ? `${users.length} ${renderPhrase(users.length)} с тобой сегодня`
+            : "Никто с тобой не тусанет"}
+        </span>
+      </h2>
+      {users.length > 0 && <table className="table">{renderTable()}</table>}
     </>
   );
 };
