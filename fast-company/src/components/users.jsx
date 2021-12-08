@@ -1,8 +1,7 @@
 import React from "react";
-import SearchStatus from "./searchStatus";
 import User from "./user";
 
-const Users = ({ users, onDelete }) => {
+const Users = ({ users, onDelete, onChangeFavourites, bookmarks }) => {
   const renderTable = () => {
     return (
       <>
@@ -20,7 +19,14 @@ const Users = ({ users, onDelete }) => {
         <tbody>
           {users.map((user) => (
             <tr key={user._id}>
-              <User user={user} />
+              <User
+                user={user}
+                bookmark={Object.assign(
+                  {},
+                  ...bookmarks.filter((item) => item.id === user._id)
+                )}
+                changeBookmark={() => onChangeFavourites(user._id)}
+              />
               <td>
                 <button
                   className="btn btn-danger"
@@ -37,12 +43,7 @@ const Users = ({ users, onDelete }) => {
   };
 
   return (
-    <>
-      <h2>
-        <SearchStatus length={users.length} />
-      </h2>
-      {users.length > 0 && <table className="table">{renderTable()}</table>}
-    </>
+    <>{users.length > 0 && <table className="table">{renderTable()}</table>}</>
   );
 };
 

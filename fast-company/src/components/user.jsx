@@ -1,16 +1,12 @@
 import React from "react";
 import Qualitie from "./qualitie";
 import Bookmark from "./bookmark";
-const User = ({ user }) => {
+const User = ({ user, changeBookmark, bookmark }) => {
+  const { status } = bookmark;
   return (
     <>
       <td>{user.name}</td>
       <td>
-        {/* {user.qualities.map(({ name, color, _id }) => (
-          <span key={_id} className={provideColor(color)}>
-            {name}
-          </span>
-        ))} */}
         {user.qualities.map((quality) => (
           <Qualitie {...quality} key={quality._id} />
         ))}
@@ -18,7 +14,9 @@ const User = ({ user }) => {
       <td>{user.profession.name}</td>
       <td>{user.completedMeetings}</td>
       <td>{user.rate}</td>
-      <td>BookMark</td>
+      <td>
+        <Bookmark status={status} changeBookmark={changeBookmark} />
+      </td>
       <td></td>
     </>
   );
