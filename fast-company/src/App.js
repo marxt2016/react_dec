@@ -5,10 +5,12 @@ import api from "./api";
 
 function App() {
   const [users, setUsers] = useState(api.users.fetchAll());
-  const handleDelete = (userId) => {};
+  const handleDelete = (userId) => {
+    setUsers(users.filter((user) => user._id !== userId));
+  };
 
   const handleToggleBookmark = (id) => {};
-  return <Users />;
+  return <Users users={users} onDelete={handleDelete} />;
 }
 
 export default App;
