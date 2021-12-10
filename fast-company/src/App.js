@@ -9,11 +9,12 @@ function App() {
   const [bookmarks, setBookmarks] = useState(initialBookmarks);
   const handleDelete = (userId) => {
     setUsers(users.filter((user) => user._id !== userId));
+    setBookmarks(bookmarks.filter((bookmark) => bookmark.id != userId));
   };
 
   const handleToggleBookmark = (id) => {
     const newBookmarks = bookmarks.map((item) =>
-      item.id === id ? { ...item, ...{ status: !item.status } } : item
+      item.id === id ? { ...item, status: !item.status } : item
     );
     setBookmarks(newBookmarks);
   };
