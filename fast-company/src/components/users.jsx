@@ -36,6 +36,9 @@ const Users = ({ users, onDelete, onChangeFavourites, bookmarks }) => {
 
     const count = filteredUsers.length;
     const userCrop = paginate(filteredUsers, currentPage, pageSize);
+    if (userCrop.length === 0 && count) {
+        setCurrentPage(1);
+    }
     const clearFilter = () => {
         setSelectedProf();
     };
