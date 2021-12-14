@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import GroupList from "./groupList";
 import SearchStatus from "./searchStatus";
 import api from "../api";
+import _ from "lodash";
 
 const Users = ({ users, onDelete, onChangeFavourites, bookmarks }) => {
     const pageSize = 2;
@@ -19,7 +20,7 @@ const Users = ({ users, onDelete, onChangeFavourites, bookmarks }) => {
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [selectedProf]);
+    }, [selectedProf, users]);
 
     const handleProfessionSelect = (item) => {
         setSelectedProf(item);
@@ -28,9 +29,11 @@ const Users = ({ users, onDelete, onChangeFavourites, bookmarks }) => {
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
     };
+
     const filteredUsers = selectedProf
-        ? users.filter((user) => user.profession === selectedProf)
+        ? users.filter((user) => _.isEqual(user.profession, selectedProf))
         : users;
+
     const count = filteredUsers.length;
     const userCrop = paginate(filteredUsers, currentPage, pageSize);
     const clearFilter = () => {
