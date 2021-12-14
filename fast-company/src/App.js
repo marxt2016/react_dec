@@ -1,15 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Users from "./components/users";
-import SearchStatus from "./components/searchStatus";
+
 import api from "./api";
 
 function App() {
-    const [users, setUsers] = useState(api.users.fetchAll());
-    const initialBookmarks = users.map(({ _id }) => ({
-        id: _id,
-        status: false
-    }));
-    const [bookmarks, setBookmarks] = useState(initialBookmarks);
+    const [users, setUsers] = useState();
+    const [bookmarks, setBookmarks] = useState();
+    useEffect(() => {
+        api.users.fetchAll().then((data) => {
+            setUsers(data);
+
+            setBookmarks(
+                data.map(({ _id }) => ({
+                    id: _id,
+                    status: false
+                }))
+            );
+        });
+    }, []);
+
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
         setBookmarks(bookmarks.filter((bookmark) => bookmark.id !== userId));
@@ -23,15 +32,14 @@ function App() {
     };
     return (
         <>
-            <h2>
-                <SearchStatus length={users.length} />
-            </h2>
-            <Users
-                users={users}
-                onDelete={handleDelete}
-                onChangeFavourites={handleToggleBookmark}
-                bookmarks={bookmarks}
-            />
+            {users && bookmarks && (
+                <Users
+                    users={users}
+                    onDelete={handleDelete}
+                    onChangeFavourites={handleToggleBookmark}
+                    bookmarks={bookmarks}
+                />
+            )}
         </>
     );
 }
