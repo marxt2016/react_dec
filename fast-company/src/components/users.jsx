@@ -20,7 +20,7 @@ const Users = ({ users, onDelete, onChangeFavourites, bookmarks }) => {
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [selectedProf, users]);
+    }, [selectedProf]);
 
     const handleProfessionSelect = (item) => {
         setSelectedProf(item);
