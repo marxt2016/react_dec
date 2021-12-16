@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Users from "./components/users";
-
+import Spinner from "./components/spinner";
 import api from "./api";
 
 function App() {
@@ -32,7 +32,9 @@ function App() {
     };
     return (
         <>
-            {users && bookmarks && (
+            {!users || !bookmarks ? (
+                <Spinner />
+            ) : (
                 <Users
                     users={users}
                     onDelete={handleDelete}

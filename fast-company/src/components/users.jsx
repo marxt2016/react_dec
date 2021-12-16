@@ -7,6 +7,7 @@ import GroupList from "./groupList";
 import SearchStatus from "./searchStatus";
 import api from "../api";
 import _ from "lodash";
+import Spinner from "./spinner";
 
 const Users = ({ users, onDelete, onChangeFavourites, bookmarks }) => {
     const pageSize = 2;
@@ -64,13 +65,9 @@ const Users = ({ users, onDelete, onChangeFavourites, bookmarks }) => {
                                 user={user}
                                 bookmark={Object.assign(
                                     {},
-                                    ...bookmarks.filter(
-                                        (item) => item.id === user._id
-                                    )
+                                    ...bookmarks.filter((item) => item.id === user._id)
                                 )}
-                                changeBookmark={() =>
-                                    onChangeFavourites(user._id)
-                                }
+                                changeBookmark={() => onChangeFavourites(user._id)}
                             />
                             <td>
                                 <button
@@ -89,17 +86,16 @@ const Users = ({ users, onDelete, onChangeFavourites, bookmarks }) => {
 
     return (
         <div className="d-flex">
-            {professions && (
+            {!professions ? (
+                <Spinner />
+            ) : (
                 <div className="d-flex flex-column flex-shrink-0 p-3">
                     <GroupList
                         items={professions}
                         onItemSelect={handleProfessionSelect}
                         selectedItem={selectedProf}
                     />
-                    <button
-                        className="btn btn-secondary mt-2"
-                        onClick={clearFilter}
-                    >
+                    <button className="btn btn-secondary mt-2" onClick={clearFilter}>
                         Очистить
                     </button>
                 </div>
