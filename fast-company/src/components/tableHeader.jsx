@@ -12,6 +12,7 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
             onSort({ path: item, order: "asc" });
         }
     };
+
     return (
         <thead>
             <tr>
@@ -27,6 +28,15 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
                         scope="col"
                     >
                         {columns[column].name}
+                        {columns[column].path === selectedSort.path ? (
+                            <i
+                                className={`bi bi-caret-${
+                                    selectedSort.order === "asc" ? "down" : "up"
+                                }-fill`}
+                            ></i>
+                        ) : (
+                            ""
+                        )}
                     </th>
                 ))}
 
