@@ -1,14 +1,18 @@
 import React from "react";
-// import User from "./user";
 import PropTypes from "prop-types";
 import TableHeader from "./tableHeader";
 import TableBody from "./tableBody";
 import Bookmark from "./bookmark";
+import QualitiesList from "./qualitiesList";
+import Table from "./table";
 
 const UsersTable = ({ users, onDelete, onChangeFavourites, bookmarks, onSort, selectedSort }) => {
     const columns = {
         name: { path: "name", name: "Имя" },
-        qualities: { name: "Качества" },
+        qualities: {
+            name: "Качества",
+            component: (user) => <QualitiesList qualities={user.qualities} />
+        },
         professions: { path: "profession.name", name: "Профессия" },
         completedMeetings: { path: "completedMeetings", name: "Встретился, раз" },
         rate: { path: "rate", name: "Оценка" },
@@ -33,37 +37,14 @@ const UsersTable = ({ users, onDelete, onChangeFavourites, bookmarks, onSort, se
             )
         }
     };
-    const renderTable = () => {
-        return (
-            <>
-                <TableHeader {...{ onSort, selectedSort, columns }} />
-                <TableBody {...{ columns, data: users }} />
-                {/* // <tbody>
-                //     {users.map((user) => (
-                //         <tr key={user._id}>
-                //             <User
-                //                 user={user}
-                //                 bookmark={Object.assign(
-                //                     {},
-                //                     ...bookmarks.filter((item) => item.id === user._id)
-                //                 )}
-                //                 changeBookmark={() => onChangeFavourites(user._id)}
-                //             />
-                //             <td>
-                //                 <button
-                //                     className="btn btn-danger"
-                //                     onClick={() => onDelete(user._id)}
-                //                 >
-                //                     delete
-                //                 </button>
-                //             </td>
-                //         </tr>
-                //     ))}
-                // </tbody> */}
-            </>
-        );
-    };
-    return <table className="table">{renderTable()}</table>;
+
+    return (
+        // <Table onSort={onSort} selectedSort={selectedSort} columns={columns} data={users} />
+        <Table>
+            <TableHeader {...{ onSort, selectedSort, columns }} />
+            <TableBody {...{ columns, data: users }} />
+        </Table>
+    );
 };
 UsersTable.propTypes = {
     users: PropTypes.array.isRequired,
