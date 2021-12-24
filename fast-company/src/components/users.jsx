@@ -7,6 +7,8 @@ import api from "../api";
 import _ from "lodash";
 import Spinner from "./spinner";
 import UsersTable from "./usersTable";
+import User from "./user";
+import { useParams } from "react-router-dom";
 
 const Users = () => {
     const pageSize = 8;
@@ -16,6 +18,7 @@ const Users = () => {
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const [users, setUsers] = useState();
     const [bookmarks, setBookmarks] = useState();
+    const params = useParams();
 
     useEffect(() => {
         api.users.fetchAll().then((data) => {
@@ -60,6 +63,7 @@ const Users = () => {
         setSortBy(item);
     };
     if (users && bookmarks) {
+        const { userId } = params;
         const filteredUsers = selectedProf
             ? users.filter((user) => _.isEqual(user.profession, selectedProf))
             : users;
@@ -75,45 +79,52 @@ const Users = () => {
         };
 
         return (
-            <div className="d-flex">
-                {!professions ? (
-                    <Spinner />
+            <>
+                {userId ? (
+                    <User users={users} id={userId} />
                 ) : (
-                    <div className="d-flex flex-column flex-shrink-0 p-3">
-                        <GroupList
-                            items={professions}
-                            onItemSelect={handleProfessionSelect}
-                            selectedItem={selectedProf}
-                        />
-                        <button className="btn btn-secondary mt-2" onClick={clearFilter}>
-                            Очистить
-                        </button>
+                    <div className="d-flex">
+                        {!professions ? (
+                            <Spinner />
+                        ) : (
+                            <div className="d-flex flex-column flex-shrink-0 p-3">
+                                <GroupList
+                                    items={professions}
+                                    onItemSelect={handleProfessionSelect}
+                                    selectedItem={selectedProf}
+                                />
+                                <button className="btn btn-secondary mt-2" onClick={clearFilter}>
+                                    Очистить
+                                </button>
+                            </div>
+                        )}
+                        <div className="d-flex flex-column">
+                            <h2>
+                                <SearchStatus length={count} />
+                            </h2>
+                            {count > 0 && (
+                                <UsersTable
+                                    users={userCrop}
+                                    onDelete={handleDelete}
+                                    onChangeFavourites={handleToggleBookmark}
+                                    bookmarks={bookmarks}
+                                    onSort={handleSort}
+                                    selectedSort={sortBy}
+                                />
+                            )}
+
+                            <div className="d-flex justify-content-center">
+                                <Pagination
+                                    itemsCount={count}
+                                    pageSize={pageSize}
+                                    currentPage={currentPage}
+                                    onPageChange={handlePageChange}
+                                />
+                            </div>
+                        </div>
                     </div>
                 )}
-                <div className="d-flex flex-column">
-                    <h2>
-                        <SearchStatus length={count} />
-                    </h2>
-                    {count > 0 && (
-                        <UsersTable
-                            users={userCrop}
-                            onDelete={handleDelete}
-                            onChangeFavourites={handleToggleBookmark}
-                            bookmarks={bookmarks}
-                            onSort={handleSort}
-                            selectedSort={sortBy}
-                        />
-                    )}
-                    <div className="d-flex justify-content-center">
-                        <Pagination
-                            itemsCount={count}
-                            pageSize={pageSize}
-                            currentPage={currentPage}
-                            onPageChange={handlePageChange}
-                        />
-                    </div>
-                </div>
-            </div>
+            </>
         );
     }
     return <Spinner />;

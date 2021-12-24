@@ -1,50 +1,30 @@
 import React from "react";
+// import Dashboard from "./components/dashboard";
+import Main from "./components/main";
+import Login from "./components/login";
+import NavBar from "./components/fromLessonRouting/navBar";
+// import Posts from "./components/posts";
 import Users from "./components/users";
-// import Spinner from "./components/spinner";
-// import api from "./api";
+import { Route, Switch, Redirect } from "react-router-dom";
+import PageNotFound from "./components/notFoundPage";
 
 function App() {
-    // const [users, setUsers] = useState();
-    // const [bookmarks, setBookmarks] = useState();
-    // useEffect(() => {
-    //     api.users.fetchAll().then((data) => {
-    //         setUsers(data);
+    return (
+        <>
+            <NavBar />
+            <Switch>
+                <Route path="/" exact component={Main} />
+                <Route path="/login" component={Login} />
+                <Route path="/users/:userId?" render={(props) => <Users {...props} />} />
 
-    //         setBookmarks(
-    //             data.map(({ _id }) => ({
-    //                 id: _id,
-    //                 status: false
-    //             }))
-    //         );
-    //     });
-    // }, []);
+                <Route path="/404" component={PageNotFound} />
 
-    // const handleDelete = (userId) => {
-    //     setUsers(users.filter((user) => user._id !== userId));
-    //     setBookmarks(bookmarks.filter((bookmark) => bookmark.id !== userId));
-    // };
-
-    // const handleToggleBookmark = (id) => {
-    //     const newBookmarks = bookmarks.map((item) =>
-    //         item.id === id ? { ...item, status: !item.status } : item
-    //     );
-    //     setBookmarks(newBookmarks);
-    // };
-    // return (
-    //     <>
-    //         {!users || !bookmarks ? (
-    //             <Spinner />
-    //         ) : (
-    //             <Users
-    //                 users={users}
-    //                 onDelete={handleDelete}
-    //                 onChangeFavourites={handleToggleBookmark}
-    //                 bookmarks={bookmarks}
-    //             />
-    //         )}
-    //     </>
-    // );
-    return <Users />;
+                <Redirect to="/404" />
+            </Switch>
+        </>
+    );
 }
 
 export default App;
+
+//  <Route path="/users" exact render={(props) => <Users {...props} />} />;
