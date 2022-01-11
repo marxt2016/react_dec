@@ -1,10 +1,10 @@
 import React from "react";
-// import Dashboard from "./components/dashboard";
-import Main from "./components/main";
-import Login from "./components/login";
-import NavBar from "./components/fromLessonRouting/navBar";
-// import Posts from "./components/posts";
-import Users from "./components/users";
+
+import Main from "./layouts/main";
+import Login from "./layouts/login";
+import NavBar from "./components/navBar";
+
+import Users from "./layouts/users";
 import { Route, Switch, Redirect } from "react-router-dom";
 import PageNotFound from "./components/notFoundPage";
 

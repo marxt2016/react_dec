@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
 import Qualitie from "./qualitie";
-import Spinner from "./spinner";
+// import Spinner from "./spinner";
 import api from "../api";
 // import _ from "lodash";
 
@@ -48,7 +48,6 @@ const User = ({ id }) => {
             ) : (
                 <>
                     <h1>Loading</h1>
-                    <Spinner />
                 </>
             )}
         </>

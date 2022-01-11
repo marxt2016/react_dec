@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { paginate } from "../utils/paginate";
-import Pagination from "./pagination";
-import GroupList from "./groupList";
-import SearchStatus from "./searchStatus";
+import Pagination from "../components/pagination";
+import GroupList from "../components/groupList";
+import SearchStatus from "../components/searchStatus";
 import api from "../api";
 import _ from "lodash";
-import Spinner from "./spinner";
-import UsersTable from "./usersTable";
-import User from "./user";
+import Spinner from "../components/spinner";
+import UsersTable from "../components/usersTable";
+import User from "../components/user";
 import { useParams } from "react-router-dom";
 
 const Users = () => {
