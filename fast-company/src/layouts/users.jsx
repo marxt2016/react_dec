@@ -9,6 +9,7 @@ import Spinner from "../components/spinner";
 import UsersTable from "../components/usersTable";
 import User from "../components/user";
 import { useParams } from "react-router-dom";
+import TextField from "../components/textField";
 
 const Users = () => {
     const pageSize = 8;
@@ -19,6 +20,11 @@ const Users = () => {
     const [users, setUsers] = useState();
     const [bookmarks, setBookmarks] = useState();
     const params = useParams();
+    const [searchValue, setSearchValue] = useState("");
+    const handleChange = (event) => {
+        setSelectedProf();
+        setSearchValue(event.target.value);
+    };
 
     useEffect(() => {
         api.users.fetchAll().then((data) => {
@@ -53,6 +59,7 @@ const Users = () => {
     }, [selectedProf]);
 
     const handleProfessionSelect = (item) => {
+        setSearchValue("");
         setSelectedProf(item);
     };
 
@@ -62,11 +69,21 @@ const Users = () => {
     const handleSort = (item) => {
         setSortBy(item);
     };
+    const clearFilter = () => {
+        setSelectedProf();
+    };
     if (users && bookmarks) {
         const { userId } = params;
-        const filteredUsers = selectedProf
-            ? users.filter((user) => _.isEqual(user.profession, selectedProf))
-            : users;
+        let filteredUsers;
+        if (!searchValue.trim()) {
+            filteredUsers = selectedProf
+                ? users.filter((user) => _.isEqual(user.profession, selectedProf))
+                : users;
+        } else {
+            filteredUsers = users.filter((user) =>
+                user.name.toLowerCase().includes(searchValue.trim().toLowerCase())
+            );
+        }
 
         const count = filteredUsers.length;
         const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
@@ -74,9 +91,6 @@ const Users = () => {
         if (userCrop.length === 0 && count) {
             setCurrentPage(1);
         }
-        const clearFilter = () => {
-            setSelectedProf();
-        };
 
         return (
             <>
@@ -102,6 +116,12 @@ const Users = () => {
                             <h2>
                                 <SearchStatus length={count} />
                             </h2>
+                            <TextField
+                                name="search"
+                                value={searchValue}
+                                onChange={handleChange}
+                                placeholder="Search..."
+                            />
                             {count > 0 && (
                                 <UsersTable
                                     users={userCrop}
