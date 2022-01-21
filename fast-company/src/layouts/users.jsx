@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { paginate } from "../utils/paginate";
-import Pagination from "../components/pagination";
-import GroupList from "../components/groupList";
-import SearchStatus from "../components/searchStatus";
+import Pagination from "../components/common/pagination";
+import GroupList from "../components/common/groupList";
+import SearchStatus from "../components/ui/searchStatus";
 import api from "../api";
 import _ from "lodash";
-import Spinner from "../components/spinner";
-import UsersTable from "../components/usersTable";
-import User from "../components/user";
+import Spinner from "../components/common/spinner";
+import UsersTable from "../components/ui/usersTable";
+import User from "../components/page/userPage/user";
 import { useParams } from "react-router-dom";
-import TextField from "../components/textField";
+import TextField from "../components/common/form/textField";
 
 const Users = () => {
     const pageSize = 8;
@@ -22,7 +22,7 @@ const Users = () => {
     const params = useParams();
     const [searchValue, setSearchValue] = useState("");
     const handleChange = (event) => {
-        setSelectedProf();
+        setSelectedProf(undefined);
         setSearchValue(event.target.value);
     };
 
@@ -56,7 +56,7 @@ const Users = () => {
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [selectedProf]);
+    }, [selectedProf, searchValue]);
 
     const handleProfessionSelect = (item) => {
         setSearchValue("");
