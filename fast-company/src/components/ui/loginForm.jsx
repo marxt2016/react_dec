@@ -1,21 +1,10 @@
 import React, { useEffect, useState } from "react";
-import * as yup from "yup";
-// import { validator } from "../../utils/validator";
+
+import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
 import CheckBoxField from "../common/form/checkBoxField";
 
 const LoginForm = () => {
-    const validateSchema = yup.object().shape({
-        passw: yup
-            .string()
-            .required("Password is required")
-            .matches(/(?=.*[A-Z])/, "Password should have at least 1 Capital letter")
-            .matches(/(?=.[0-9])/, "Password should have at least 1 number")
-            .matches(/(?=.[!@#$%^&*])/, "Password should have at least 1 special symbol !@#$%^&*")
-            .matches(/(?=.{8})/, "Password should have at least 8 characters"),
-        email: yup.string().required("Email is required").email("Incorrect email")
-    });
-
     const [data, setData] = useState({ email: "", passw: "", stayOn: true });
     const [errors, setErrors] = useState({});
     useEffect(() => validate(), [data]);
@@ -29,30 +18,27 @@ const LoginForm = () => {
         console.log(data);
     };
     const isValid = Object.keys(errors).length === 0;
-    // const validatorConfig = {
-    //     email: {
-    //         isRequired: { message: "Email is required" },
-    //         isEmail: { message: "Incorrect email" }
-    //     },
-    //     passw: {
-    //         isRequired: { message: "Password is required" },
-    //         isCapital: { message: "Password should have at least 1 Capital letter" },
-    //         isDigit: { message: "Password should have at least 1 number" },
-    //         isMinimum: { message: "Password should have at least 8 characters", value: 8 }
-    //     }
-    // };
+    const validatorConfig = {
+        email: {
+            isRequired: { message: "Email is required" },
+            isEmail: { message: "Incorrect email" }
+        },
+        passw: {
+            isRequired: { message: "Password is required" },
+            isCapital: { message: "Password should have at least 1 Capital letter" },
+            isDigit: { message: "Password should have at least 1 number" },
+            isMinimum: { message: "Password should have at least 8 characters", value: 8 }
+        }
+    };
     const validate = () => {
-        // const errors = validator(data, validatorConfig);
-        validateSchema
-            .validate(data)
-            .then(() => setErrors({}))
-            .catch((error) => setErrors({ [error.path]: error.message }));
-        // for (const fieldName in data) {
-        //     if (data[fieldName] === "") {
-        //         errors[fieldName] = `${fieldName} is required`;
-        //     }
-        // }
-        // setErrors(errors);
+        const errors = validator(data, validatorConfig);
+
+        for (const fieldName in data) {
+            if (data[fieldName] === "") {
+                errors[fieldName] = `${fieldName} is required`;
+            }
+        }
+        setErrors(errors);
         return Object.keys(errors).length === 0;
     };
 
