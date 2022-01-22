@@ -1,50 +1,60 @@
 import React, { useState, useEffect } from "react";
+
 import PropTypes from "prop-types";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import Qualitie from "../../ui/qualities/quality";
-
 import api from "../../../api";
-// import _ from "lodash";
+import EditForm from "../../ui/editForm";
 
-const User = ({ id }) => {
+const User = ({ id, users }) => {
     const history = useHistory();
-    const [user, setUser] = useState();
+    const { edit } = useParams();
+    const [user, setUser] = useState(users.filter((user) => id === user._id)[0]);
     const handleReturn = () => {
         history.replace("/users");
     };
 
-    // const getUserById = (id) => {
-    //     return users.find((user) => _.isEqual(user._id, id));
-    // };
-    // const user = getUserById(id);
-
     useEffect(() => {
-        api.users.getById(id).then((data) => {
-            setUser(data);
-        });
-    }, []);
-
+        api.users.getById(id).then((data) => setUser(data));
+    }, [user]);
     return (
         <>
             {user ? (
-                <div className="m-3">
-                    <h1>Name: {user.name}</h1>
-                    <h2>Profession: {user.profession.name}</h2>
-                    <div>
-                        {user.qualities.map((quality) => (
-                            <Qualitie {...quality} key={quality._id} />
-                        ))}
+                edit ? (
+                    <div className="container mt-5">
+                        <div className="row">
+                            <div className="col-md-6 offset-md-3 shadow p-4">
+                                <EditForm user={user} />
+                            </div>
+                        </div>
                     </div>
-                    <h3>Completed meetings: {user.completedMeetings}</h3>
-                    <h3>Rate: {user.rate}</h3>
-                    <button
-                        onClick={() => {
-                            handleReturn();
-                        }}
-                    >
-                        Back to Users
-                    </button>
-                </div>
+                ) : (
+                    <div className="m-3">
+                        <h1>Name: {user.name}</h1>
+                        <h2>Profession: {user.profession.name}</h2>
+                        <h2>{user.sex}</h2>
+                        <h2>{user.email}</h2>
+                        <div>
+                            {user.qualities.map((quality) => (
+                                <Qualitie {...quality} key={quality._id} />
+                            ))}
+                        </div>
+                        <h3>Completed meetings: {user.completedMeetings}</h3>
+                        <h3>Rate: {user.rate}</h3>
+                        <button
+                            className="btn btn-primary m-2"
+                            onClick={() => {
+                                handleReturn();
+                            }}
+                        >
+                            Back to Users
+                        </button>
+
+                        <Link to={`/users/${id}/edit`} className="btn btn-primary">
+                            Edit user
+                        </Link>
+                    </div>
+                )
             ) : (
                 <>
                     <h1>Loading</h1>

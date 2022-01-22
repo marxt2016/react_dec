@@ -15,7 +15,7 @@ function App() {
             <Switch>
                 <Route path="/" exact component={Main} />
                 <Route path="/login/:type?" component={Login} />
-                <Route path="/users/:userId?" render={(props) => <Users {...props} />} />
+                <Route path="/users/:userId?/:edit?" render={(props) => <Users {...props} />} />
                 <Route path="/404" component={PageNotFound} />
 
                 <Redirect to="/404" />
@@ -25,5 +25,3 @@ function App() {
 }
 
 export default App;
-
-//  <Route path="/users" exact render={(props) => <Users {...props} />} />;

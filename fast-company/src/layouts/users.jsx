@@ -23,7 +23,7 @@ const Users = () => {
     const [searchValue, setSearchValue] = useState("");
     const handleChange = (event) => {
         setSelectedProf(undefined);
-        setSearchValue(event.target.value);
+        setSearchValue(event.value);
     };
 
     useEffect(() => {
@@ -36,7 +36,7 @@ const Users = () => {
                 }))
             );
         });
-    }, []);
+    }, [users]);
 
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
