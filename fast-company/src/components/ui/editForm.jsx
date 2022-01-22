@@ -21,6 +21,7 @@ const EditForm = ({ user }) => {
         sex: user.sex,
         qualities: [...user.qualities]
     });
+
     useEffect(() => validate(), [data]);
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProfessions(data));
@@ -28,14 +29,17 @@ const EditForm = ({ user }) => {
     }, []);
 
     const handleChange = (target) => {
-        console.log(professions);
         if (target.name === "profession") {
             const key = Object.keys(professions).filter(
                 (professionName) => target.value === professions[professionName]._id
             );
-            console.log(key[0]);
             setData((prevState) => ({ ...prevState, [target.name]: professions[key[0]] }));
-            //    { _id: "67rdca3eeb7f6fgeed471814", name: "Физик" };
+        } else if (target.name === "qualities") {
+            const valuesFormatted = Object.values(qualities).filter(
+                (quality) => target.value.filter(({ value }) => quality._id === value).length > 0
+            );
+
+            setData((prevState) => ({ ...prevState, [target.name]: valuesFormatted }));
         } else {
             setData((prevState) => ({ ...prevState, [target.name]: target.value }));
         }

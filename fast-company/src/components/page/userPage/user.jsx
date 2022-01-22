@@ -16,7 +16,7 @@ const User = ({ id, users }) => {
 
     useEffect(() => {
         api.users.getById(id).then((data) => setUser(data));
-    }, [user]);
+    }, [edit]);
     return (
         <>
             {user ? (
