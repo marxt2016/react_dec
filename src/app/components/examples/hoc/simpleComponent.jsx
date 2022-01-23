@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 
 const SimpleComponenet = ({ onLogin, onLogout, isAuth }) => {
+    useEffect(() => {
+        console.log("render button");
+    });
     return (
         <>
             {isAuth ? (
