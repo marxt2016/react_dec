@@ -33,16 +33,15 @@ const EditForm = ({ user }) => {
             const key = Object.keys(professions).filter(
                 (professionName) => target.value === professions[professionName]._id
             );
-            setData((prevState) => ({ ...prevState, [target.name]: professions[key[0]] }));
+            target.value = professions[key[0]];
         } else if (target.name === "qualities") {
             const valuesFormatted = Object.values(qualities).filter(
                 (quality) => target.value.filter(({ value }) => quality._id === value).length > 0
             );
-
-            setData((prevState) => ({ ...prevState, [target.name]: valuesFormatted }));
-        } else {
-            setData((prevState) => ({ ...prevState, [target.name]: target.value }));
+            target.value = valuesFormatted;
         }
+
+        setData((prevState) => ({ ...prevState, [target.name]: target.value }));
     };
 
     const handleSubmit = (event) => {
