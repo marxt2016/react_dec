@@ -10,7 +10,6 @@ const ChildrenExercise = () => {
                 const config = {
                     number: number
                 };
-                React.cloneElement(child, config);
                 number++;
                 return React.cloneElement(child, config);
             }
