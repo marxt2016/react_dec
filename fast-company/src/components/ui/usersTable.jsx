@@ -6,7 +6,7 @@ import Bookmark from "../common/bookmark";
 import Qualities from "./qualities";
 import Table from "../common/table";
 
-const UsersTable = ({ users, onDelete, onChangeFavourites, bookmarks, onSort, selectedSort }) => {
+const UsersTable = ({ users, onDelete, onChangeFavourites, onSort, selectedSort }) => {
     const columns = {
         name: { path: "name", name: "Имя" },
         qualities: {
@@ -21,10 +21,7 @@ const UsersTable = ({ users, onDelete, onChangeFavourites, bookmarks, onSort, se
             name: "Избранное",
             component: (user) => (
                 <Bookmark
-                    status={
-                        Object.assign({}, ...bookmarks.filter((item) => item.id === user._id))
-                            .status
-                    }
+                    status={user.bookmark}
                     changeBookmark={() => onChangeFavourites(user._id)}
                 />
             )
@@ -51,7 +48,7 @@ UsersTable.propTypes = {
     onDelete: PropTypes.func,
     onChangeFavourites: PropTypes.func,
     onSort: PropTypes.func,
-    bookmarks: PropTypes.array.isRequired,
+
     selectedSort: PropTypes.object.isRequired
 };
 export default UsersTable;

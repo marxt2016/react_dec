@@ -23,6 +23,8 @@ const EditForm = ({ user }) => {
         sex: "male",
         qualities: []
     });
+
+    console.log(data);
     const getProfessionById = (id) => {
         for (const prof in professions) {
             const profData = professions[prof];
@@ -72,7 +74,7 @@ const EditForm = ({ user }) => {
         event.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        console.log(getQualities(data.qualities));
+
         api.users.update(user._id, {
             ...data,
             profession: getProfessionById(data.profession),

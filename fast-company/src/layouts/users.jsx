@@ -18,7 +18,7 @@ const Users = () => {
     const [selectedProf, setSelectedProf] = useState();
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const [users, setUsers] = useState();
-    const [bookmarks, setBookmarks] = useState();
+
     const params = useParams();
     const [searchValue, setSearchValue] = useState("");
     const handleChange = (event) => {
@@ -29,25 +29,21 @@ const Users = () => {
     useEffect(() => {
         api.users.fetchAll().then((data) => {
             setUsers(data);
-            setBookmarks(
-                data.map(({ _id }) => ({
-                    id: _id,
-                    status: false
-                }))
-            );
         });
     }, [users]);
 
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
-        setBookmarks(bookmarks.filter((bookmark) => bookmark.id !== userId));
     };
 
     const handleToggleBookmark = (id) => {
-        const newBookmarks = bookmarks.map((item) =>
-            item.id === id ? { ...item, status: !item.status } : item
-        );
-        setBookmarks(newBookmarks);
+        users.map((user) => {
+            if (user._id === id) {
+                user.bookmark = !user.bookmark;
+                api.users.update(id, user);
+            }
+            return user;
+        });
     };
 
     useEffect(() => {
@@ -72,7 +68,7 @@ const Users = () => {
     const clearFilter = () => {
         setSelectedProf();
     };
-    if (users && bookmarks) {
+    if (users) {
         const { userId } = params;
         let filteredUsers;
         if (!searchValue.trim()) {
@@ -127,7 +123,6 @@ const Users = () => {
                                     users={userCrop}
                                     onDelete={handleDelete}
                                     onChangeFavourites={handleToggleBookmark}
-                                    bookmarks={bookmarks}
                                     onSort={handleSort}
                                     selectedSort={sortBy}
                                 />

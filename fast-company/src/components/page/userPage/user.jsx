@@ -15,9 +15,10 @@ const User = ({ id, users }) => {
     };
     useEffect(() => {
         api.users.getById(id).then((data) => setUser(data));
-        console.log(user);
     }, [edit]);
-
+    const handleClick = () => {
+        history.push(history.location.pathname + "/edit");
+    };
     return (
         <>
             {user ? (
@@ -54,6 +55,9 @@ const User = ({ id, users }) => {
                         <Link to={`/users/${id}/edit`} className="btn btn-primary">
                             Edit user
                         </Link>
+                        <button className="btn btn-primary m-2" onClick={handleClick}>
+                            Change user
+                        </button>
                     </div>
                 )
             ) : (
