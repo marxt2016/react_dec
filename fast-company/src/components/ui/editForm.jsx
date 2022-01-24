@@ -6,41 +6,65 @@ import api from "../../api";
 import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
+import Spinner from "../common/spinner";
 import PropTypes from "prop-types";
 
 const EditForm = ({ user }) => {
     const [qualities, setQualities] = useState({});
-    const [professions, setProfessions] = useState();
+    const [professions, setProfessions] = useState([]);
     const [errors, setErrors] = useState({});
+    const [isLoading, setIsLoading] = useState();
     const history = useHistory();
 
     const [data, setData] = useState({
-        email: user.email,
-        name: user.name,
-        profession: user.profession,
-        sex: user.sex,
-        qualities: [...user.qualities]
+        email: "",
+        name: "",
+        profession: "",
+        sex: "male",
+        qualities: []
     });
+    const getProfessionById = (id) => {
+        for (const prof in professions) {
+            const profData = professions[prof];
+            if (profData._id === id) return profData;
+        }
+    };
+    const getQualities = (elements) => {
+        const qualArray = [];
+        for (const elem in elements) {
+            for (const quality in qualities) {
+                if (elements[elem].value === qualities[quality]._id) {
+                    qualArray.push(qualities[quality]);
+                }
+            }
+        }
+        return qualArray;
+    };
 
+    const transformData = (data) => {
+        return data.map((qual) => ({ label: qual.name, value: qual._id }));
+    };
     useEffect(() => validate(), [data]);
     useEffect(() => {
+        setIsLoading(true);
         api.professions.fetchAll().then((data) => setProfessions(data));
         api.qualities.fetchAll().then((data) => setQualities(data));
+        api.users.getById(user._id).then(({ profession, qualities, ...data }) =>
+            setData((prevState) => ({
+                ...prevState,
+                ...data,
+                qualities: transformData(qualities),
+                profession: profession._id
+            }))
+        );
     }, []);
+    useEffect(() => {
+        if (data._id) {
+            setIsLoading(false);
+        }
+    }, [data]);
 
     const handleChange = (target) => {
-        if (target.name === "profession") {
-            const key = Object.keys(professions).filter(
-                (professionName) => target.value === professions[professionName]._id
-            );
-            target.value = professions[key[0]];
-        } else if (target.name === "qualities") {
-            const valuesFormatted = Object.values(qualities).filter(
-                (quality) => target.value.filter(({ value }) => quality._id === value).length > 0
-            );
-            target.value = valuesFormatted;
-        }
-
         setData((prevState) => ({ ...prevState, [target.name]: target.value }));
     };
 
@@ -48,8 +72,12 @@ const EditForm = ({ user }) => {
         event.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-
-        api.users.update(user._id, data);
+        console.log(getQualities(data.qualities));
+        api.users.update(user._id, {
+            ...data,
+            profession: getProfessionById(data.profession),
+            qualities: getQualities(data.qualities)
+        });
         history.replace(`/users/${user._id}`);
     };
     const isValid = Object.keys(errors).length === 0;
@@ -75,7 +103,9 @@ const EditForm = ({ user }) => {
         setErrors(errors);
         return Object.keys(errors).length === 0;
     };
-
+    if (isLoading) {
+        return <Spinner />;
+    }
     return (
         <form onSubmit={handleSubmit}>
             <TextField
@@ -94,11 +124,11 @@ const EditForm = ({ user }) => {
             />
 
             <SelectField
-                defaultOption={data.profession.name}
+                defaultOption="Choose..."
                 options={professions}
                 onChange={handleChange}
                 error={errors.profession}
-                value={data.profession.name}
+                value={data.profession}
                 label="Profession"
                 name="profession"
             />

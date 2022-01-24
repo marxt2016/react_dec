@@ -9,14 +9,15 @@ import EditForm from "../../ui/editForm";
 const User = ({ id, users }) => {
     const history = useHistory();
     const { edit } = useParams();
-    const [user, setUser] = useState(users.filter((user) => id === user._id)[0]);
+    const [user, setUser] = useState();
     const handleReturn = () => {
         history.replace("/users");
     };
-
     useEffect(() => {
         api.users.getById(id).then((data) => setUser(data));
+        console.log(user);
     }, [edit]);
+
     return (
         <>
             {user ? (
