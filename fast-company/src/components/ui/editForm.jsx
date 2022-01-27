@@ -9,9 +9,9 @@ import MultiSelectField from "../common/form/multiSelectField";
 import Spinner from "../common/spinner";
 import PropTypes from "prop-types";
 
-const EditForm = ({ user }) => {
+const EditForm = ({ user, professions }) => {
     const [qualities, setQualities] = useState({});
-    const [professions, setProfessions] = useState([]);
+
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState();
     const history = useHistory();
@@ -46,20 +46,22 @@ const EditForm = ({ user }) => {
     const transformData = (data) => {
         return data.map((qual) => ({ label: qual.name, value: qual._id }));
     };
+    api.qualities.fetchAll().then((data) => {
+        setQualities(data);
+    });
+
     useEffect(() => validate(), [data]);
     useEffect(() => {
         setIsLoading(true);
-        api.professions.fetchAll().then((data) => setProfessions(data));
-        api.qualities.fetchAll().then((data) => setQualities(data));
-        api.users.getById(user._id).then(({ profession, qualities, ...data }) =>
-            setData((prevState) => ({
-                ...prevState,
-                ...data,
-                qualities: transformData(qualities),
-                profession: profession._id
-            }))
-        );
+
+        setData((prevState) => ({
+            ...prevState,
+            ...user,
+            qualities: transformData(user.qualities),
+            profession: user.profession._id
+        }));
     }, []);
+
     useEffect(() => {
         if (data._id) {
             setIsLoading(false);
@@ -160,7 +162,8 @@ const EditForm = ({ user }) => {
 
 EditForm.propTypes = {
     id: PropTypes.string,
-    user: PropTypes.object
+    user: PropTypes.object,
+    professions: PropTypes.object
 };
 
 export default EditForm;
