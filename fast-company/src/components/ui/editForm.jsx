@@ -42,7 +42,9 @@ const EditForm = ({ user, professions }) => {
         }
         return qualArray;
     };
-
+    const handleChange = (target) => {
+        setData((prevState) => ({ ...prevState, [target.name]: target.value }));
+    };
     const transformData = (data) => {
         return data.map((qual) => ({ label: qual.name, value: qual._id }));
     };
@@ -67,10 +69,6 @@ const EditForm = ({ user, professions }) => {
             setIsLoading(false);
         }
     }, [data]);
-
-    const handleChange = (target) => {
-        setData((prevState) => ({ ...prevState, [target.name]: target.value }));
-    };
 
     const handleSubmit = (event) => {
         event.preventDefault();

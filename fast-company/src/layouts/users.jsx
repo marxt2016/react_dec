@@ -25,12 +25,12 @@ const Users = () => {
         setSelectedProf(undefined);
         setSearchValue(event.value);
     };
-
+    console.log(users);
     useEffect(() => {
         api.users.fetchAll().then((data) => {
             setUsers(data);
         });
-    }, [users]);
+    }, [params]);
 
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Link, useHistory, useParams } from "react-router-dom";
 import Qualitie from "../../ui/qualities/quality";
-// import api from "../../../api";
+import api from "../../../api";
 import EditForm from "../../ui/editForm";
 
 const User = ({ id, users, professions }) => {
@@ -16,13 +16,11 @@ const User = ({ id, users, professions }) => {
     const handleClick = () => {
         history.push(history.location.pathname + "/edit");
     };
-    // useEffect(() => {
-    //     api.users.getById(id).then((data) => setUser(data));
-    // }, [edit]);
     useEffect(() => {
-        setUser(users.filter((user) => (id = user._id))[0]);
-    }, [handleClick]);
+        api.users.getById(id).then((data) => setUser(data));
+    }, [edit]);
 
+    console.log(user);
     return (
         <>
             {user ? (
