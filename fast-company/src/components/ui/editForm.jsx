@@ -24,7 +24,6 @@ const EditForm = ({ user, professions }) => {
         qualities: []
     });
 
-    console.log(data);
     const getProfessionById = (id) => {
         for (const prof in professions) {
             const profData = professions[prof];
