@@ -12,6 +12,9 @@ const User = ({ id, users, professions }) => {
     const history = useHistory();
     const { edit } = useParams();
     const [user, setUser] = useState();
+    const handleReturn = () => {
+        history.replace("/users");
+    };
 
     const handleClick = () => {
         history.push(history.location.pathname + "/edit");
@@ -99,7 +102,15 @@ const User = ({ id, users, professions }) => {
                                 </div>
                             </div>
                             <div className="col-md-8">
-                                <Comments users={users} />
+                                <Comments users={users} id={id} />
+                                <button
+                                    className="btn btn-primary m-2"
+                                    onClick={() => {
+                                        handleReturn();
+                                    }}
+                                >
+                                    Back to Users
+                                </button>
                             </div>
                         </div>
                     </div>

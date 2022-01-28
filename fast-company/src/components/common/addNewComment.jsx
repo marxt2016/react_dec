@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { validator } from "../../utils/validator";
 import SelectField from "./form/selectField";
 import TextArea from "./form/textArea";
+
 const AddNewComment = ({ users, onSubmit }) => {
     const [data, setData] = useState({ user: "", comment: "" });
     const [errors, setErrors] = useState({});
