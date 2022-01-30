@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import formatDate from "../../utils/formatDate";
 
 const Comment = ({ comment, users, onDelete }) => {
     return (
@@ -24,7 +25,9 @@ const Comment = ({ comment, users, onDelete }) => {
                                             users.filter((user) => user._id === comment.userId)[0]
                                                 .name
                                         }
-                                        <span className="small">{comment.time}</span>
+                                        <span className="small">
+                                            - {formatDate(comment.created_at)}
+                                        </span>
                                     </p>
                                     <button
                                         className="btn btn-sm text-primary d-flex align-items-center"

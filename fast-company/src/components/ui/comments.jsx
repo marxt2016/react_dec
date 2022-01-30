@@ -3,9 +3,11 @@ import PropTypes from "prop-types";
 import AddNewComment from "../common/addNewComment";
 import CommentsList from "../common/commentsList";
 import api from "../../api";
+import _ from "lodash";
 
-const Comments = ({ users, id }) => {
+const Comments = ({ id, users }) => {
     const [comments, setComments] = useState([]);
+
     useEffect(() => api.comments.fetchCommentsForUser(id).then((data) => setComments(data)), []);
     const onSubmit = (data) => {
         api.comments
@@ -18,25 +20,25 @@ const Comments = ({ users, id }) => {
                 setComments([...comments, data]);
             });
     };
+
     const onDelete = (id) => {
         api.comments.remove(id).then((data) => {
             setComments(comments.filter((comment) => comment._id !== id));
         });
     };
-
+    const commentsOrderedDesc = _.orderBy(comments, ["created_at"], ["desc"]);
     return (
         <>
             <AddNewComment users={users} onSubmit={onSubmit} />
-
-            <CommentsList comments={comments} users={users} onDelete={onDelete} />
+            {commentsOrderedDesc.length > 0 && (
+                <CommentsList comments={commentsOrderedDesc} users={users} onDelete={onDelete} />
+            )}
         </>
     );
 };
 
 Comments.propTypes = {
     id: PropTypes.string,
-    users: PropTypes.array,
-    time: PropTypes.string,
-    content: PropTypes.string
+    users: PropTypes.array
 };
 export default Comments;

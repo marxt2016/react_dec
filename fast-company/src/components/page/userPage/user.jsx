@@ -15,7 +15,6 @@ const User = ({ id, users, professions }) => {
     const handleReturn = () => {
         history.replace("/users");
     };
-
     const handleClick = () => {
         history.push(history.location.pathname + "/edit");
     };

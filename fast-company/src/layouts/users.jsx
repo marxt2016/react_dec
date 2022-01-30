@@ -30,7 +30,8 @@ const Users = () => {
         api.users.fetchAll().then((data) => {
             setUsers(data);
         });
-    }, [params.userId]);
+        api.professions.fetchAll().then((data) => setProfessions(data));
+    }, []);
 
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
@@ -45,10 +46,6 @@ const Users = () => {
             return user;
         });
     };
-
-    useEffect(() => {
-        api.professions.fetchAll().then((data) => setProfessions(data));
-    }, []);
 
     useEffect(() => {
         setCurrentPage(1);
