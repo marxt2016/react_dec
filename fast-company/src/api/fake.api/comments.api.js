@@ -35,9 +35,7 @@ const fetchCommentsForUser = (userId) =>
     new Promise((resolve) => {
         window.setTimeout(function () {
             resolve(
-                JSON.parse(localStorage.getItem("comments")).filter(
-                    (c) => c.pageId === userId
-                )
+                JSON.parse(localStorage.getItem("comments")).filter((c) => c.pageId === userId)
             );
         }, 200);
     });
@@ -47,7 +45,7 @@ const add = (data) =>
             const comments = JSON.parse(localStorage.getItem("comments"));
             const newComment = {
                 ...data,
-                created_at: Date.now(),
+                created_at: Date.now().toString(),
                 _id: Math.random().toString(36).substr(2, 9)
             };
             comments.push(newComment);

@@ -51,6 +51,10 @@ const EditForm = ({ user, professions }) => {
         setQualities(data);
     });
 
+    const handleReturn = () => {
+        history.replace(`/users/${user._id}`);
+    };
+
     useEffect(() => validate(), [data]);
     useEffect(() => {
         setIsLoading(true);
@@ -108,52 +112,66 @@ const EditForm = ({ user, professions }) => {
         return <Spinner />;
     }
     return (
-        <form onSubmit={handleSubmit}>
-            <TextField
-                label="Name"
-                name="name"
-                value={data.name}
-                onChange={handleChange}
-                error={errors.name}
-            />
-            <TextField
-                label="Email"
-                name="email"
-                value={data.email}
-                onChange={handleChange}
-                error={errors.email}
-            />
+        <>
+            <form onSubmit={handleSubmit}>
+                <TextField
+                    label="Name"
+                    name="name"
+                    value={data.name}
+                    onChange={handleChange}
+                    error={errors.name}
+                />
+                <TextField
+                    label="Email"
+                    name="email"
+                    value={data.email}
+                    onChange={handleChange}
+                    error={errors.email}
+                />
 
-            <SelectField
-                defaultOption="Choose..."
-                options={professions}
-                onChange={handleChange}
-                error={errors.profession}
-                value={data.profession}
-                label="Profession"
-                name="profession"
-            />
-            <RadioField
-                options={[
-                    { name: "Male", value: "male" },
-                    { name: "Female", value: "female" },
-                    { name: "Other", value: "other" }
-                ]}
-                value={data.sex}
-                name="sex"
-                onChange={handleChange}
-            />
-            <MultiSelectField
-                options={qualities}
-                onChange={handleChange}
-                defaultValue={data.qualities}
-                name="qualities"
-                label="Qualities"
-            />
-            <button className="btn btn-primary w-100 mx-auto" type="submit" disabled={!isValid}>
-                Submit
-            </button>
-        </form>
+                <SelectField
+                    defaultOption="Choose..."
+                    options={professions}
+                    onChange={handleChange}
+                    error={errors.profession}
+                    value={data.profession}
+                    label="Profession"
+                    name="profession"
+                />
+                <RadioField
+                    options={[
+                        { name: "Male", value: "male" },
+                        { name: "Female", value: "female" },
+                        { name: "Other", value: "other" }
+                    ]}
+                    value={data.sex}
+                    name="sex"
+                    onChange={handleChange}
+                />
+                <MultiSelectField
+                    options={qualities}
+                    onChange={handleChange}
+                    defaultValue={data.qualities}
+                    name="qualities"
+                    label="Qualities"
+                />
+                <button
+                    className="btn btn-primary w-100 mx-auto "
+                    type="submit"
+                    disabled={!isValid}
+                >
+                    Submit
+                </button>
+                <button
+                    className="btn btn-primary w-100 mt-2"
+                    onClick={() => {
+                        handleReturn();
+                    }}
+                >
+                    Back to Users
+                </button>
+            </form>
+        </>
     );
 };
 

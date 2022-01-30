@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const Comment = ({ comment, users }) => {
+const Comment = ({ comment, users, onDelete }) => {
     return (
         <div className="bg-light card-body  mb-3">
             <div className="row">
@@ -21,12 +21,15 @@ const Comment = ({ comment, users }) => {
                                 <div className="d-flex justify-content-between align-items-center">
                                     <p className="mb-1 ">
                                         {
-                                            users.filter((user) => (user._id = comment.userId))[0]
+                                            users.filter((user) => user._id === comment.userId)[0]
                                                 .name
                                         }
                                         <span className="small">{comment.time}</span>
                                     </p>
-                                    <button className="btn btn-sm text-primary d-flex align-items-center">
+                                    <button
+                                        className="btn btn-sm text-primary d-flex align-items-center"
+                                        onClick={() => onDelete(comment._id)}
+                                    >
                                         <i className="bi bi-x-lg"></i>
                                     </button>
                                 </div>
@@ -43,6 +46,7 @@ const Comment = ({ comment, users }) => {
 Comment.propTypes = {
     comment: PropTypes.object,
     users: PropTypes.array,
-    content: PropTypes.string
+    content: PropTypes.string,
+    onDelete: PropTypes.func
 };
 export default Comment;
