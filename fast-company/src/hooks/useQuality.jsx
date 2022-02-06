@@ -24,9 +24,10 @@ export const QualityProvider = ({ children }) => {
         }
     }, [error]);
 
-    function getQuality(qualitiesIds) {
+    function getQuality({ qualitiesIds }) {
+        console.log(qualitiesIds);
         return qualities.filter((quality) => {
-            return qualitiesIds.qualitiesIds.some((id) => quality._id === id);
+            return qualitiesIds.some((id) => quality._id === id);
         });
     }
     async function getQualities() {
