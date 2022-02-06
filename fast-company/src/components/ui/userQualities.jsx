@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Qualitie from "../ui/qualities/quality";
+import Qualities from "./qualities";
 
-const UserQaualities = ({ user }) => {
+const UserQualities = ({ data }) => {
     return (
         <div className="card mb-3">
             <div className="card-body d-flex flex-column justify-content-center text-center">
@@ -10,16 +10,13 @@ const UserQaualities = ({ user }) => {
                     <span>Qualities</span>
                 </h5>
                 <p className="card-text">
-                    {user.qualities.map((quality) => (
-                        <Qualitie {...quality} key={quality._id} />
-                    ))}
+                    <Qualities qualities={data} />
                 </p>
             </div>
         </div>
     );
 };
-
-UserQaualities.propTypes = {
-    user: PropTypes.object
+UserQualities.propTypes = {
+    data: PropTypes.array
 };
-export default UserQaualities;
+export default UserQualities;

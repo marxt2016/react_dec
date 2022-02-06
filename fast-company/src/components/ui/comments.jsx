@@ -1,44 +1,45 @@
+import { orderBy } from "lodash";
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import AddNewComment from "../common/addNewComment";
-import CommentsList from "../common/commentsList";
 import api from "../../api";
-import _ from "lodash";
+import { useParams } from "react-router-dom";
+import CommentsList, { AddCommentForm } from "../common/comments";
 
-const Comments = ({ id, users }) => {
+const Comments = () => {
+    const { userId } = useParams();
     const [comments, setComments] = useState([]);
-
-    useEffect(() => api.comments.fetchCommentsForUser(id).then((data) => setComments(data)), []);
-    const onSubmit = (data) => {
+    useEffect(() => {
+        api.comments.fetchCommentsForUser(userId).then((data) => setComments(data));
+    }, []);
+    const handleSubmit = (data) => {
         api.comments
-            .add({
-                userId: users.filter((user) => user.name === data.user)[0]._id,
-                pageId: id,
-                content: data.comment
-            })
-            .then((data) => {
-                setComments([...comments, data]);
-            });
+            .add({ ...data, pageId: userId })
+            .then((data) => setComments([...comments, data]));
     };
-
-    const onDelete = (id) => {
-        api.comments.remove(id).then((data) => {
-            setComments(comments.filter((comment) => comment._id !== id));
+    const handleRemoveComment = (id) => {
+        api.comments.remove(id).then((id) => {
+            setComments(comments.filter((x) => x._id !== id));
         });
     };
-    const commentsOrderedDesc = _.orderBy(comments, ["created_at"], ["desc"]);
+    const sortedComments = orderBy(comments, ["created_at"], ["desc"]);
     return (
         <>
-            <AddNewComment users={users} onSubmit={onSubmit} />
-            {commentsOrderedDesc.length > 0 && (
-                <CommentsList comments={commentsOrderedDesc} users={users} onDelete={onDelete} />
+            <div className="card mb-2">
+                {" "}
+                <div className="card-body ">
+                    <AddCommentForm onSubmit={handleSubmit} />
+                </div>
+            </div>
+            {sortedComments.length > 0 && (
+                <div className="card mb-3">
+                    <div className="card-body ">
+                        <h2>Comments</h2>
+                        <hr />
+                        <CommentsList comments={sortedComments} onRemove={handleRemoveComment} />
+                    </div>
+                </div>
             )}
         </>
     );
 };
 
-Comments.propTypes = {
-    id: PropTypes.string,
-    users: PropTypes.array
-};
 export default Comments;

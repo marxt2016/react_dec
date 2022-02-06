@@ -5,25 +5,26 @@ import TableBody from "../common/table/tableBody";
 import Bookmark from "../common/bookmark";
 import Qualities from "./qualities";
 import Table from "../common/table";
+import Profession from "./profession";
 
-const UsersTable = ({ users, onDelete, onChangeFavourites, onSort, selectedSort }) => {
+const UsersTable = ({ users, onDelete, onToggleBookMark, onSort, selectedSort }) => {
     const columns = {
         name: { path: "name", name: "Имя" },
         qualities: {
             name: "Качества",
             component: (user) => <Qualities qualities={user.qualities} />
         },
-        professions: { path: "profession.name", name: "Профессия" },
+        professions: {
+            name: "Профессия",
+            component: (user) => <Profession id={user.profession} />
+        },
         completedMeetings: { path: "completedMeetings", name: "Встретился, раз" },
         rate: { path: "rate", name: "Оценка" },
         bookmark: {
             path: "bookmark",
             name: "Избранное",
             component: (user) => (
-                <Bookmark
-                    status={user.bookmark}
-                    changeBookmark={() => onChangeFavourites(user._id)}
-                />
+                <Bookmark status={user.bookmark} onClick={() => onToggleBookMark(user._id)} />
             )
         },
         delete: {
@@ -46,7 +47,7 @@ const UsersTable = ({ users, onDelete, onChangeFavourites, onSort, selectedSort 
 UsersTable.propTypes = {
     users: PropTypes.array.isRequired,
     onDelete: PropTypes.func,
-    onChangeFavourites: PropTypes.func,
+    onToggleBookMark: PropTypes.func,
     onSort: PropTypes.func,
 
     selectedSort: PropTypes.object.isRequired
