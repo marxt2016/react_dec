@@ -15,7 +15,7 @@ export const ProfessionProvider = ({ children }) => {
 
     useEffect(() => {
         getProfessionsList();
-    }, [isLoading]);
+    }, []);
 
     useEffect(() => {
         if (error !== null) {

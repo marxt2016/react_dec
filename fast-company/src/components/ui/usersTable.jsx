@@ -12,7 +12,7 @@ const UsersTable = ({ users, onDelete, onToggleBookMark, onSort, selectedSort })
         name: { path: "name", name: "Имя" },
         qualities: {
             name: "Качества",
-            component: (user) => <Qualities qualities={user.qualities} />
+            component: (user) => <Qualities qualitiesIds={user.qualities} />
         },
         professions: {
             name: "Профессия",

@@ -10,6 +10,7 @@ import PageNotFound from "./components/common/notFoundPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ProfessionProvider } from "./hooks/useProfession";
+import { QualityProvider } from "./hooks/useQuality";
 
 function App() {
     return (
@@ -17,11 +18,13 @@ function App() {
             <NavBar />
             <Switch>
                 <ProfessionProvider>
-                    <Route path="/users/:userId?/:edit?" component={Users} />
+                    <QualityProvider>
+                        <Route path="/users/:userId?/:edit?" component={Users} />
 
-                    <Route path="/login/:type?" component={Login} />
+                        <Route path="/login/:type?" component={Login} />
 
-                    <Route path="/" exact component={Main} />
+                        <Route path="/" exact component={Main} />
+                    </QualityProvider>
                 </ProfessionProvider>
                 <Route path="/404" component={PageNotFound} />
                 <Redirect to="/404" />
