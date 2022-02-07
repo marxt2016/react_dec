@@ -25,7 +25,6 @@ export const QualityProvider = ({ children }) => {
     }, [error]);
 
     function getQuality({ qualitiesIds }) {
-        console.log(qualitiesIds);
         return qualities.filter((quality) => {
             return qualitiesIds.some((id) => quality._id === id);
         });
