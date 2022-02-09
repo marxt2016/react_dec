@@ -16,19 +16,21 @@ function App() {
     return (
         <div>
             <NavBar />
-            <Switch>
-                <ProfessionProvider>
-                    <QualityProvider>
+
+            <ProfessionProvider>
+                <QualityProvider>
+                    <Switch>
                         <Route path="/users/:userId?/:edit?" component={Users} />
 
                         <Route path="/login/:type?" component={Login} />
 
                         <Route path="/" exact component={Main} />
-                    </QualityProvider>
-                </ProfessionProvider>
-                <Route path="/404" component={PageNotFound} />
-                <Redirect to="/404" />
-            </Switch>
+                        <Route path="/404" component={PageNotFound} />
+                        <Redirect to="/404" />
+                    </Switch>
+                </QualityProvider>
+            </ProfessionProvider>
+
             <ToastContainer />
         </div>
     );
