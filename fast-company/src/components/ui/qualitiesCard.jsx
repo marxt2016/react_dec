@@ -1,8 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
 import Qualities from "./qualities";
+import PropTypes from "prop-types";
 
-const UserQualities = ({ data }) => {
+const QualitiesCard = ({ data }) => {
     return (
         <div className="card mb-3">
             <div className="card-body d-flex flex-column justify-content-center text-center">
@@ -16,7 +16,8 @@ const UserQualities = ({ data }) => {
         </div>
     );
 };
-UserQualities.propTypes = {
+QualitiesCard.propTypes = {
     data: PropTypes.array
 };
-export default UserQualities;
+
+export default QualitiesCard;

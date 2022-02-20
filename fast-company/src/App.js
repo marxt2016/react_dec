@@ -11,7 +11,7 @@ import PageNotFound from "./components/common/notFoundPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ProfessionProvider } from "./hooks/useProfession";
-import { QualityProvider } from "./hooks/useQuality";
+import { QualitiesProvider } from "./hooks/useQualities";
 import AuthProvider from "./hooks/useAuth";
 import ProtectedRoute from "./components/common/protectedRoute";
 
@@ -22,7 +22,7 @@ function App() {
                 <NavBar />
 
                 <ProfessionProvider>
-                    <QualityProvider>
+                    <QualitiesProvider>
                         <Switch>
                             <ProtectedRoute path="/users/:userId?/:edit?" component={Users} />
 
@@ -32,7 +32,7 @@ function App() {
                             <Route path="/404" component={PageNotFound} />
                             <Redirect to="/404" />
                         </Switch>
-                    </QualityProvider>
+                    </QualitiesProvider>
                 </ProfessionProvider>
             </AuthProvider>
 

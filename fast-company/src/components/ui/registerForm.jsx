@@ -7,10 +7,10 @@ import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import CheckBoxField from "../common/form/checkBoxField";
-import { useQuality } from "../../hooks/useQuality";
 import { useProfessions } from "../../hooks/useProfession";
 import { useAuth } from "../../hooks/useAuth";
 import { useHistory } from "react-router-dom";
+import { useQualities } from "../../hooks/useQualities";
 
 const RegisterForm = () => {
     // const [professions, setProfessions] = useState();
@@ -27,7 +27,7 @@ const RegisterForm = () => {
         licence: false
     });
     const [errors, setErrors] = useState({});
-    const { qualities } = useQuality();
+    const { qualities } = useQualities();
     const { professions } = useProfessions();
     const qualitiesList = qualities.map((quality) => ({ label: quality.name, value: quality._id }));
     const professionsList = professions.map((profession) => ({
