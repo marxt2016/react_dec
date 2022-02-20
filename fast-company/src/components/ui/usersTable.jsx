@@ -26,14 +26,14 @@ const UsersTable = ({ users, onDelete, onToggleBookMark, onSort, selectedSort })
             component: (user) => (
                 <Bookmark status={user.bookmark} onClick={() => onToggleBookMark(user._id)} />
             )
-        },
-        delete: {
-            component: (user) => (
-                <button className="btn btn-danger" onClick={() => onDelete(user._id)}>
-                    delete
-                </button>
-            )
         }
+        // delete: {
+        //     component: (user) => (
+        //         <button className="btn btn-danger" onClick={() => onDelete(user._id)}>
+        //             delete
+        //         </button>
+        //     )
+        // }
     };
 
     return (

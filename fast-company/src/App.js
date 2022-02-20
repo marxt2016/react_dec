@@ -2,6 +2,7 @@ import React from "react";
 
 import Main from "./layouts/main";
 import Login from "./layouts/login";
+import Logout from "./layouts/logout";
 import NavBar from "./components/ui/navBar";
 
 import Users from "./layouts/users";
@@ -26,7 +27,7 @@ function App() {
                             <ProtectedRoute path="/users/:userId?/:edit?" component={Users} />
 
                             <Route path="/login/:type?" component={Login} />
-
+                            <Route path="/logout" component={Logout} />
                             <Route path="/" exact component={Main} />
                             <Route path="/404" component={PageNotFound} />
                             <Redirect to="/404" />
