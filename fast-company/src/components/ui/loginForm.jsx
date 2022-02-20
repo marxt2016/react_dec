@@ -8,6 +8,7 @@ import { useHistory } from "react-router-dom";
 const LoginForm = () => {
     const [data, setData] = useState({ email: "", passw: "", stayOn: true });
     const history = useHistory();
+
     const [errors, setErrors] = useState({});
     useEffect(() => validate(), [data]);
     const handleChange = (target) => {
@@ -20,7 +21,9 @@ const LoginForm = () => {
         if (!isValid) return;
         try {
             await signIn(data);
-            history.push("/");
+            history.push(
+                history.location.state.from.pathname ? history.location.state.from.pathname : "/"
+            );
         } catch (error) {
             setErrors(error);
         }
