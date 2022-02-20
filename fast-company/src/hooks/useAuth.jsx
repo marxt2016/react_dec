@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import userService from "../services/user.service";
 import { toast } from "react-toastify";
-import { setTokens } from "../services/localStorage.service";
+import localStorageService, { setTokens } from "../services/localStorage.service";
 
 const httpAuth = axios.create();
 const AuthContext = React.createContext();
@@ -19,6 +19,15 @@ const AuthProvider = ({ children }) => {
         const { message } = error.response.data;
         setError(message);
     }
+
+    async function getUserData() {
+        try {
+            const { content } = await userService.getCurrentUser();
+            setUser(content);
+        } catch (error) {
+            errorCatcher(error);
+        }
+    }
     useEffect(() => {
         if (error !== null) {
             toast.error(error);
@@ -26,12 +35,28 @@ const AuthProvider = ({ children }) => {
         }
     }, [error]);
 
+    useEffect(() => {
+        if (localStorageService.getAccessToken()) {
+            getUserData();
+        }
+    }, []);
+
+    function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
     async function signUp({ email, password, ...rest }) {
         const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`;
         try {
             const { data } = await httpAuth.post(url, { email, password, returnSecureToken: true });
             setTokens(data);
-            await createUser({ _id: data.localId, email, ...rest });
+
+            await createUser({
+                _id: data.localId,
+                email,
+                rate: randomInt(1, 5),
+                completedMeetings: randomInt(1, 200),
+                ...rest
+            });
         } catch (error) {
             errorCatcher(error);
             const { code, message } = error.response.data.error;
@@ -55,25 +80,29 @@ const AuthProvider = ({ children }) => {
             });
 
             setTokens(data);
+            getUserData();
         } catch (error) {
             errorCatcher(error);
             const { code, message } = error.response.data.error;
-
+            let errorObject = {};
             if (code === 400) {
-                if (message === "INVALID_PASSWORD") {
-                    const errorObject = { passw: "Invalid password" };
-                    throw errorObject;
-                }
-                if (message === "EMAIL_NOT_FOUND") {
-                    const errorObject = { email: "Email doesn't exist" };
-                    throw errorObject;
+                switch (message) {
+                    case "INVALID_PASSWORD":
+                        errorObject = { passw: "Invalid password" };
+                        throw errorObject;
+
+                    case "EMAIL_NOT_FOUND":
+                        errorObject = { email: "Email not found" };
+                        throw errorObject;
+                    default:
+                        throw new Error("Too much login attempts");
                 }
             }
         }
     }
     async function createUser(data) {
         try {
-            const { content } = userService.create(data);
+            const { content } = await userService.create(data);
             setUser(content);
         } catch (error) {
             errorCatcher(error);

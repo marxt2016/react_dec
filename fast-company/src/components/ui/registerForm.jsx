@@ -18,6 +18,7 @@ const RegisterForm = () => {
     // const [qualities, setQualities] = useState({});
     const history = useHistory();
     const [data, setData] = useState({
+        name: "",
         email: "",
         passw: "",
         profession: "",
@@ -62,6 +63,10 @@ const RegisterForm = () => {
     };
     const isValid = Object.keys(errors).length === 0;
     const validatorConfig = {
+        name: {
+            isRequired: { message: "Name is required" },
+            isMinimum: { message: "Name should have at least 3 characters", value: 3 }
+        },
         email: {
             isRequired: { message: "Email is required" },
             isEmail: { message: "Incorrect email" }
@@ -93,6 +98,13 @@ const RegisterForm = () => {
 
     return (
         <form onSubmit={handleSubmit}>
+            <TextField
+                label="name"
+                name="name"
+                value={data.name}
+                onChange={handleChange}
+                error={errors.name}
+            />
             <TextField
                 label="email"
                 name="email"
