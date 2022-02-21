@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { validator } from "../../../utils/validator";
 // import api from "../../../api";
 import TextField from "../../common/form/textField";
@@ -14,7 +14,7 @@ import { useAuth } from "../../../hooks/useAuth";
 
 const EditUserPage = () => {
     const { userId } = useParams();
-    // const history = useHistory();
+    const history = useHistory();
     const { updateUser } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState({
@@ -30,12 +30,7 @@ const EditUserPage = () => {
 
     const { qualities } = useQualities();
     const [errors, setErrors] = useState({});
-    // const getProfessionById = (id) => {
-    //     for (const prof in professions) {
-    //         const profData = professions[prof];
-    //         if (profData._id === id) return profData;
-    //     }
-    // };
+
     const getQualities = (elements) => {
         const qualitiesArray = [];
         for (const elem of elements) {
@@ -51,17 +46,13 @@ const EditUserPage = () => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        console.log({
-            ...data,
-            profession: data.profession,
-            qualities: data.qualities.map((q) => q.value)
-        });
+
         updateUser({
             ...data,
             profession: data.profession,
             qualities: data.qualities.map((q) => q.value)
         });
-        // history.push(`/users/${data._id}`);
+        history.push(`/users/${data._id}`);
     };
     const transformData = (data) => {
         const qualitiesTransform = getQualities(data);
@@ -108,7 +99,6 @@ const EditUserPage = () => {
             ...prevState,
             [target.name]: target.value
         }));
-        console.log(data);
     };
     const validate = () => {
         const errors = validator(data, validatorConfig);

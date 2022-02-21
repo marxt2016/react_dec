@@ -15,7 +15,6 @@ const userService = {
     },
     update: async (payload) => {
         const data = await httpService.put(userEndpoint + payload._id, payload);
-        console.log(data);
         return data;
     },
     getCurrentUser: async () => {
