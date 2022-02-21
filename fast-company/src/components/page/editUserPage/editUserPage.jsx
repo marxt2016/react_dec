@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { validator } from "../../../utils/validator";
-import api from "../../../api";
+// import api from "../../../api";
 import TextField from "../../common/form/textField";
 import SelectField from "../../common/form/selectField";
 import RadioField from "../../common/form/radioField";
@@ -10,10 +10,12 @@ import BackHistoryButton from "../../common/backButton";
 import { useProfessions } from "../../../hooks/useProfession";
 import { useUser } from "../../../hooks/useUsers";
 import { useQualities } from "../../../hooks/useQualities";
+import { useAuth } from "../../../hooks/useAuth";
 
 const EditUserPage = () => {
     const { userId } = useParams();
-    const history = useHistory();
+    // const history = useHistory();
+    const { updateUser } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState({
         name: "",
@@ -24,16 +26,16 @@ const EditUserPage = () => {
     });
     const { getUserById } = useUser();
 
-    const { professions, getProfessionsList, getProfession } = useProfessions();
+    const { professions, getProfessionsList } = useProfessions();
 
-    const { qualities, getQuality } = useQualities();
+    const { qualities } = useQualities();
     const [errors, setErrors] = useState({});
-    const getProfessionById = (id) => {
-        for (const prof in professions) {
-            const profData = professions[prof];
-            if (profData._id === id) return profData;
-        }
-    };
+    // const getProfessionById = (id) => {
+    //     for (const prof in professions) {
+    //         const profData = professions[prof];
+    //         if (profData._id === id) return profData;
+    //     }
+    // };
     const getQualities = (elements) => {
         const qualitiesArray = [];
         for (const elem of elements) {
@@ -49,20 +51,22 @@ const EditUserPage = () => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        const { profession, qualities } = data;
-        api.users
-            .update(userId, {
-                ...data,
-                profession: getProfessionById(profession),
-                qualities: getQuality(qualities)
-            })
-            .then((data) => history.push(`/users/${data._id}`));
-        console.log(data);
+        console.log({
+            ...data,
+            profession: data.profession,
+            qualities: data.qualities.map((q) => q.value)
+        });
+        updateUser({
+            ...data,
+            profession: data.profession,
+            qualities: data.qualities.map((q) => q.value)
+        });
+        // history.push(`/users/${data._id}`);
     };
     const transformData = (data) => {
         const qualitiesTransform = getQualities(data);
 
-        return qualitiesTransform.map((qual) => ({ label: qual.name, value: qual }));
+        return qualitiesTransform.map((qual) => ({ label: qual.name, value: qual._id }));
     };
     useEffect(() => {
         setIsLoading(true);
@@ -73,7 +77,7 @@ const EditUserPage = () => {
             setData((prevState) => ({
                 ...prevState,
                 ...user,
-                profession: getProfession(user.profession),
+                profession: user.profession,
                 qualities: transformData(user.qualities)
             }));
         }
@@ -104,6 +108,7 @@ const EditUserPage = () => {
             ...prevState,
             [target.name]: target.value
         }));
+        console.log(data);
     };
     const validate = () => {
         const errors = validator(data, validatorConfig);
@@ -144,7 +149,7 @@ const EditUserPage = () => {
                                 options={professionsList}
                                 name="profession"
                                 onChange={handleChange}
-                                value={data.profession.name}
+                                value={data.profession}
                                 error={errors.profession}
                             />
                             <RadioField
