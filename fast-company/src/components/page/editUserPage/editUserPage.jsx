@@ -1,35 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { validator } from "../../../utils/validator";
-// import api from "../../../api";
+
 import TextField from "../../common/form/textField";
 import SelectField from "../../common/form/selectField";
 import RadioField from "../../common/form/radioField";
 import MultiSelectField from "../../common/form/multiSelectField";
 import BackHistoryButton from "../../common/backButton";
 import { useProfessions } from "../../../hooks/useProfession";
-import { useUser } from "../../../hooks/useUsers";
 import { useQualities } from "../../../hooks/useQualities";
 import { useAuth } from "../../../hooks/useAuth";
 
 const EditUserPage = () => {
-    const { userId } = useParams();
     const history = useHistory();
-    const { updateUser } = useAuth();
-    const [isLoading, setIsLoading] = useState(false);
-    const [data, setData] = useState({
-        name: "",
-        email: "",
-        profession: "",
-        sex: "male",
-        qualities: []
-    });
-    const { getUserById } = useUser();
+    const { currentUser, updateUser } = useAuth();
+    const [isLoading, setIsLoading] = useState(true);
+    const [data, setData] = useState();
 
-    const { professions, getProfessionsList } = useProfessions();
+    const { professions, isLoading: professionsLoading } = useProfessions();
 
-    const { qualities } = useQualities();
+    const { qualities, isLoading: qualitiesLoading } = useQualities();
     const [errors, setErrors] = useState({});
+    const qualitiesList = qualities.map((quality) => ({ label: quality.name, value: quality._id }));
+    const professionsList = professions.map((profession) => ({
+        label: profession.name,
+        value: profession._id
+    }));
 
     const getQualities = (elements) => {
         const qualitiesArray = [];
@@ -42,17 +38,17 @@ const EditUserPage = () => {
         }
         return qualitiesArray;
     };
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
 
-        updateUser({
+        await updateUser({
             ...data,
-            profession: data.profession,
             qualities: data.qualities.map((q) => q.value)
         });
-        history.push(`/users/${data._id}`);
+
+        history.push(`/users/${currentUser._id}`);
     };
     const transformData = (data) => {
         const qualitiesTransform = getQualities(data);
@@ -60,22 +56,15 @@ const EditUserPage = () => {
         return qualitiesTransform.map((qual) => ({ label: qual.name, value: qual._id }));
     };
     useEffect(() => {
-        setIsLoading(true);
-        getProfessionsList();
-        const user = getUserById(userId);
-
-        if (user && professions && qualities) {
-            setData((prevState) => ({
-                ...prevState,
-                ...user,
-                profession: user.profession,
-                qualities: transformData(user.qualities)
-            }));
+        if (!qualitiesLoading && !professionsLoading && currentUser && !data) {
+            setData({
+                ...currentUser,
+                qualities: transformData(currentUser.qualities)
+            });
         }
-    }, []);
-
+    }, [qualitiesLoading, professionsLoading, currentUser, data]);
     useEffect(() => {
-        if (data._id) setIsLoading(false);
+        if (data && isLoading) setIsLoading(false);
     }, [data]);
 
     const validatorConfig = {
@@ -106,11 +95,6 @@ const EditUserPage = () => {
         return Object.keys(errors).length === 0;
     };
     const isValid = Object.keys(errors).length === 0;
-    const qualitiesList = qualities.map((quality) => ({ label: quality.name, value: quality._id }));
-    const professionsList = professions.map((profession) => ({
-        label: profession.name,
-        value: profession._id
-    }));
 
     return (
         <div className="container mt-5">

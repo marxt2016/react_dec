@@ -108,16 +108,13 @@ const AuthProvider = ({ children }) => {
         } catch (error) {
             errorCatcher(error);
             const { code, message } = error.response.data.error;
-            let errorObject = {};
+
             if (code === 400) {
                 switch (message) {
                     case "INVALID_PASSWORD":
-                        errorObject = { passw: "Invalid password" };
-                        throw errorObject;
-
+                        throw new Error("Invalid password or email");
                     case "EMAIL_NOT_FOUND":
-                        errorObject = { email: "Email not found" };
-                        throw errorObject;
+                        throw new Error("Invalid password or email");
                     default:
                         throw new Error("Too much login attempts");
                 }
