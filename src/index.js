@@ -2,52 +2,15 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import * as actions from "./store/actionTypes";
 import { createStore } from "./store/createStore";
+import { initiateStore } from "./store/store";
 import { taskReducer } from "./store/taskReducer";
 
-// function taskReducer(state, action) {
-//   switch (action.type) {
-//     // case "task/completed":
-//     //   const newArray = [...state];
-//     //   const elementIndex = newArray.findIndex((el) => el.id === action.payload.id);
-//     //   newArray[elementIndex].completed = true;
-//     //   return newArray;
-//     case "task/updated": {
-//       const newArray = [...state];
-//       const elementIndex = newArray.findIndex((el) => el.id === action.payload.id);
-//       newArray[elementIndex] = { ...newArray[elementIndex], ...action.payload };
-//       return newArray;
-//     }
-//     default:
-//       break;
-//   }
-// }
+// const initialState = [
+//   { id: 1, title: "Task1", completed: false },
+//   { id: 2, title: "Task2", completed: false },
+// ];
 
-// function createStore(reducer, initialState) {
-//   let state = initialState;
-//   let listeners = [];
-//   function getState() {
-//     return state;
-//   }
-//   function dispatch(action) {
-//     state = reducer(state, action);
-//     for (let i = 0; i < listeners.length; i++) {
-//       const listener = listeners[i];
-//       listener();
-//     }
-//   }
-//   function subscribe(listener) {
-//     listeners.push(listener);
-//   }
-
-//   return { getState, dispatch, subscribe };
-// }
-
-const initialState = [
-  { id: 1, title: "Task1", completed: false },
-  { id: 2, title: "Task2", completed: false },
-];
-
-const store = createStore(taskReducer, initialState);
+const store = initiateStore();
 const App = (params) => {
   const [state, setState] = useState(store.getState());
   useEffect(() => {
