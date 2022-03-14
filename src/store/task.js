@@ -1,51 +1,51 @@
-import { createAction } from "@reduxjs/toolkit";
+import { createAction, createReducer } from "@reduxjs/toolkit";
+import { buildQueries } from "@testing-library/react";
 
 const update = createAction("task/updated");
 const remove = createAction("task/removed");
-
-// const TASK_UPDATED = "task/updated";
-// const TASK_DELETED = "task/deleted";
+const initialState = [
+  { id: 1, title: "Task1", completed: false },
+  { id: 2, title: "Task2", completed: false },
+];
 
 export function taskCompleted(id) {
   return update({ id, completed: true });
-  //   return {
-  //     type: TASK_UPDATED,
-  //     payload: { id, completed: true },
-  //   };
 }
 
 export function titleChanged(id) {
   return update({ id, title: `New title for ${id}` });
-  //   return {
-  //     type: TASK_UPDATED,
-  //     payload: { id, title: `New title for ${id}` },
-  //   };
 }
 
 export function taskDeleted(id) {
   return remove({ id });
-  //   return {
-  //     type: TASK_DELETED,
-  //     payload: { id },
-  //   };
 }
 
-function taskReducer(state = [], action) {
-  switch (action.type) {
-    case update.type: {
-      const newArray = [...state];
-      const elementIndex = newArray.findIndex((el) => el.id === action.payload.id);
-      newArray[elementIndex] = { ...newArray[elementIndex], ...action.payload };
-      return newArray;
-    }
-    case remove.type: {
-      const newArray = [...state];
+const taskReducer = createReducer(initialState, (builder) => {
+  builder
+    .addCase(update, (state, action) => {
+      const elementIndex = state.findIndex((el) => el.id === action.payload.id);
+      state[elementIndex] = { ...state[elementIndex], ...action.payload };
+    })
+    .addCase(remove, (state, action) => {
+      return state.filter((el) => el.id !== action.payload.id);
+    });
+});
+// function taskReducer(state = [], action) {
+//   switch (action.type) {
+//     case update.type: {
+//       const newArray = [...state];
+//       const elementIndex = newArray.findIndex((el) => el.id === action.payload.id);
+//       newArray[elementIndex] = { ...newArray[elementIndex], ...action.payload };
+//       return newArray;
+//     }
+//     case remove.type: {
+//       const newArray = [...state];
 
-      return newArray.filter((el) => el.id !== action.payload.id);
-    }
-    default:
-      return state;
-  }
-}
+//       return newArray.filter((el) => el.id !== action.payload.id);
+//     }
+//     default:
+//       return state;
+//   }
+// }
 
 export default taskReducer;
