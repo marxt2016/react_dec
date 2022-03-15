@@ -1,7 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-//createAction, createReducer,
-// const update = createAction("task/updated");
-// const remove = createAction("task/removed");
+
 const initialState = [
   { id: 1, title: "Task1", completed: false },
   { id: 2, title: "Task2", completed: false },
@@ -20,17 +18,6 @@ const taskSlice = createSlice({
     },
   },
 });
-
-// const taskReducer = createReducer(initialState, (builder) => {
-//   builder
-//     .addCase(update, (state, action) => {
-//       const elementIndex = state.findIndex((el) => el.id === action.payload.id);
-//       state[elementIndex] = { ...state[elementIndex], ...action.payload };
-//     })
-//     .addCase(remove, (state, action) => {
-//       return state.filter((el) => el.id !== action.payload.id);
-//     });
-// });
 
 const { actions, reducer: taskReducer } = taskSlice;
 const { update, remove } = actions;
