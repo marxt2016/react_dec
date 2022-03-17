@@ -1,7 +1,7 @@
 export function logger(state) {
   return function wrapDispatchToAddLogging(next) {
     return function dispatchAndLog(action) {
-      //   console.log("next  ", next);
+      // console.log("next  ", next);
       //   console.log("dispatching", action);
       //   if (action.type === "task/update") {
       //     return dispatch({ type: "task/remove", payload: { ...action.payload } });
