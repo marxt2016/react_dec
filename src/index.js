@@ -2,16 +2,19 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { titleChanged, taskDeleted, completeTask, getTasks } from "./store/task";
 import configureStore from "./store/store";
+import { Provider, useSelector } from "react-redux";
 
 const store = configureStore();
 
 const App = (params) => {
-  const [state, setState] = useState(store.getState());
+  // const [state, setState] = useState(store.getState());
+  const state = useSelector((state) => state);
+
   useEffect(() => {
     store.dispatch(getTasks());
-    store.subscribe(() => {
-      setState(store.getState());
-    });
+    // store.subscribe(() => {
+    //   setState(store.getState());
+    // });
   }, []);
 
   const changeTitlle = (taskId) => {
@@ -45,7 +48,9 @@ const App = (params) => {
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );
