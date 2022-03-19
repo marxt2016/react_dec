@@ -14,12 +14,6 @@ const App = (params) => {
     });
   }, []);
 
-  // const completeTask = (taskId) => {
-  //   store.dispatch((dispatch, getState) => {
-  //     console.log(dispatch);
-  //     store.dispatch(taskCompleted(taskId));
-  //   });
-  // };
   const changeTitlle = (taskId) => {
     store.dispatch(() => {
       store.dispatch(titleChanged(taskId));
