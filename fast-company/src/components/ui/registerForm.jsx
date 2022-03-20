@@ -2,22 +2,20 @@ import React, { useEffect, useState } from "react";
 
 import TextField from "../common/form/textField";
 import { validator } from "../../utils/validator";
-// import api from "../../api";
+
 import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import CheckBoxField from "../common/form/checkBoxField";
-import { useProfessions } from "../../hooks/useProfession";
+// import { useProfessions } from "../../hooks/useProfession";
 import { useAuth } from "../../hooks/useAuth";
 import { useHistory } from "react-router-dom";
 // import { useQualities } from "../../hooks/useQualities";
 import { useSelector } from "react-redux";
 import { getQualities } from "../../../src/store/qualities";
+import { getProfessions } from "../../store/professions";
 
 const RegisterForm = () => {
-    // const [professions, setProfessions] = useState();
-
-    // const [qualities, setQualities] = useState({});
     const history = useHistory();
     const [data, setData] = useState({
         name: "",
@@ -33,7 +31,9 @@ const RegisterForm = () => {
 
     const qualities = useSelector(getQualities());
 
-    const { professions } = useProfessions();
+    // const { professions } = useProfessions();
+
+    const professions = useSelector(getProfessions());
     const qualitiesList = qualities.map((quality) => ({ label: quality.name, value: quality._id }));
     const professionsList = professions.map((profession) => ({
         label: profession.name,
