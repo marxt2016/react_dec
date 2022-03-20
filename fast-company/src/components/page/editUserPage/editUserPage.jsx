@@ -8,8 +8,10 @@ import RadioField from "../../common/form/radioField";
 import MultiSelectField from "../../common/form/multiSelectField";
 import BackHistoryButton from "../../common/backButton";
 import { useProfessions } from "../../../hooks/useProfession";
-import { useQualities } from "../../../hooks/useQualities";
+// import { useQualities } from "../../../hooks/useQualities";
 import { useAuth } from "../../../hooks/useAuth";
+import { useSelector } from "react-redux";
+import { getQualities, getQualitiesLoadingStatus } from "../../../store/qualities";
 
 const EditUserPage = () => {
     const history = useHistory();
@@ -19,7 +21,10 @@ const EditUserPage = () => {
 
     const { professions, isLoading: professionsLoading } = useProfessions();
 
-    const { qualities, isLoading: qualitiesLoading } = useQualities();
+    // const { qualities, isLoading: qualitiesLoading } = useQualities();
+    const qualities = useSelector(getQualities());
+    const qualitiesLoading = useSelector(getQualitiesLoadingStatus());
+
     const [errors, setErrors] = useState({});
     const qualitiesList = qualities.map((quality) => ({ label: quality.name, value: quality._id }));
     const professionsList = professions.map((profession) => ({
@@ -27,7 +32,7 @@ const EditUserPage = () => {
         value: profession._id
     }));
 
-    const getQualities = (elements) => {
+    const getQualitiesTransform = (elements) => {
         const qualitiesArray = [];
         for (const elem of elements) {
             for (const quality in qualities) {
@@ -51,7 +56,7 @@ const EditUserPage = () => {
         history.push(`/users/${currentUser._id}`);
     };
     const transformData = (data) => {
-        const qualitiesTransform = getQualities(data);
+        const qualitiesTransform = getQualitiesTransform(data);
 
         return qualitiesTransform.map((qual) => ({ label: qual.name, value: qual._id }));
     };

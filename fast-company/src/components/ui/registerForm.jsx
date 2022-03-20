@@ -10,7 +10,9 @@ import CheckBoxField from "../common/form/checkBoxField";
 import { useProfessions } from "../../hooks/useProfession";
 import { useAuth } from "../../hooks/useAuth";
 import { useHistory } from "react-router-dom";
-import { useQualities } from "../../hooks/useQualities";
+// import { useQualities } from "../../hooks/useQualities";
+import { useSelector } from "react-redux";
+import { getQualities } from "../../../src/store/qualities";
 
 const RegisterForm = () => {
     // const [professions, setProfessions] = useState();
@@ -27,7 +29,10 @@ const RegisterForm = () => {
         licence: false
     });
     const [errors, setErrors] = useState({});
-    const { qualities } = useQualities();
+    // const { qualities } = useQualities();
+
+    const qualities = useSelector(getQualities());
+
     const { professions } = useProfessions();
     const qualitiesList = qualities.map((quality) => ({ label: quality.name, value: quality._id }));
     const professionsList = professions.map((profession) => ({
