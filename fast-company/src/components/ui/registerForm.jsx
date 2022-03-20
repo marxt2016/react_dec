@@ -2,21 +2,20 @@ import React, { useEffect, useState } from "react";
 
 import TextField from "../common/form/textField";
 import { validator } from "../../utils/validator";
-
 import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import CheckBoxField from "../common/form/checkBoxField";
-// import { useProfessions } from "../../hooks/useProfession";
-import { useAuth } from "../../hooks/useAuth";
-import { useHistory } from "react-router-dom";
-// import { useQualities } from "../../hooks/useQualities";
-import { useSelector } from "react-redux";
+// import { useAuth } from "../../hooks/useAuth";
+// import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { getQualities } from "../../../src/store/qualities";
 import { getProfessions } from "../../store/professions";
+import { signUp } from "../../store/users";
 
 const RegisterForm = () => {
-    const history = useHistory();
+    // const history = useHistory();
+    const dispatch = useDispatch();
     const [data, setData] = useState({
         name: "",
         email: "",
@@ -27,12 +26,7 @@ const RegisterForm = () => {
         licence: false
     });
     const [errors, setErrors] = useState({});
-    // const { qualities } = useQualities();
-
     const qualities = useSelector(getQualities());
-
-    // const { professions } = useProfessions();
-
     const professions = useSelector(getProfessions());
     const qualitiesList = qualities.map((quality) => ({ label: quality.name, value: quality._id }));
     const professionsList = professions.map((profession) => ({
@@ -40,17 +34,13 @@ const RegisterForm = () => {
         value: profession._id
     }));
 
-    // useEffect(() => {
-    //     api.professions.fetchAll().then((data) => setProfessions(data));
-    //     api.qualities.fetchAll().then((data) => setQualities(data));
-    // }, []);
     useEffect(() => validate(), [data]);
     const handleChange = (target) => {
         setData((prevState) => ({ ...prevState, [target.name]: target.value }));
     };
-    const { signUp } = useAuth();
+    // const { signUp } = useAuth();
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
         const isValid = validate();
         if (!isValid) return;
@@ -59,12 +49,13 @@ const RegisterForm = () => {
             qualities: data.qualities.map((quality) => quality.value),
             password: data.passw
         };
-        try {
-            await signUp(newData);
-            history.push("/");
-        } catch (error) {
-            setErrors(error);
-        }
+        dispatch(signUp(newData));
+        // try {
+        //     await signUp(newData);
+        //     history.push("/");
+        // } catch (error) {
+        //     setErrors(error);
+        // }
     };
     const isValid = Object.keys(errors).length === 0;
     const validatorConfig = {
