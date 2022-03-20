@@ -63,7 +63,21 @@ export const loadUsersList = () => async (dispatch, getState) => {
         dispatch(usersRequestFailed(error.message));
     }
 };
+export const logIn =
+    ({ payload, redirect }) =>
+    async (dispatch) => {
+        const { email, passw } = payload;
+        dispatch(authRequested());
 
+        try {
+            const data = await authService.login({ email, passw });
+            dispatch(authRequestSuccess({ userId: data.localId }));
+            localStorageService.setTokens(data);
+            history.push(redirect);
+        } catch (error) {
+            dispatch(authRequestFailed(error.message));
+        }
+    };
 export const signUp =
     ({ email, password, ...rest }) =>
     async (dispatch) => {
