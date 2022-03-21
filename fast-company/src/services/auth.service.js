@@ -18,7 +18,6 @@ const authService = {
         return data;
     },
     login: async ({ email, passw }) => {
-        console.log(email, passw);
         const { data } = await httpAuth.post(`accounts:signInWithPassword`, {
             email,
             password: passw,

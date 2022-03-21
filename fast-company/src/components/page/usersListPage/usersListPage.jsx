@@ -9,14 +9,15 @@ import UserTable from "../../ui/usersTable";
 import _ from "lodash";
 // import { useUser } from "../../../hooks/useUsers";
 // import { useProfessions } from "../../../hooks/useProfession";
-import { useAuth } from "../../../hooks/useAuth";
+// import { useAuth } from "../../../hooks/useAuth";
 import { useSelector } from "react-redux";
 import { getProfessions, getProfessionsLoadingStatus } from "../../../store/professions";
-import { getUsersList } from "../../../store/users";
+import { getCurrentUserId, getUsersList } from "../../../store/users";
 
 const UsersListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const { currentUser } = useAuth();
+    // const { currentUser } = useAuth();
+    const currentUserId = useSelector(getCurrentUserId());
     // const { isLoading: professionsLoading, professions } = useProfessions();
 
     const professions = useSelector(getProfessions());
@@ -72,7 +73,7 @@ const UsersListPage = () => {
                       (user) => JSON.stringify(user.profession) === JSON.stringify(selectedProf)
                   )
                 : data;
-            return filteredUsers.filter((user) => user._id !== currentUser._id);
+            return filteredUsers.filter((user) => user._id !== currentUserId);
         }
         const filteredUsers = filterUsers(users);
         const count = filteredUsers.length;
