@@ -1,11 +1,13 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
-import { useAuth } from "./useAuth";
+// import { useAuth } from "./useAuth";
 import { nanoid } from "nanoid";
 import commentService from "../services/comment.service";
 
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { getCurrentUserId } from "../store/users";
 
 const CommentsContext = React.createContext();
 export const useComments = () => {
@@ -17,7 +19,8 @@ export const CommentsProvider = ({ children }) => {
     const [error, setError] = useState(null);
 
     const { userId } = useParams();
-    const { currentUser } = useAuth();
+    // const { currentUser } = useAuth();
+    const currentUserId = useSelector(getCurrentUserId());
     const [comments, setComments] = useState([]);
     useEffect(() => {
         getComments();
@@ -60,7 +63,7 @@ export const CommentsProvider = ({ children }) => {
             ...data,
             pageId: userId,
             created_at: Date.now(),
-            userId: currentUser._id
+            userId: currentUserId
         };
         try {
             const { content } = await commentService.createComment(comment);
