@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
-// import { useAuth } from "../../hooks/useAuth";
 import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
 import CheckBoxField from "../common/form/checkBoxField";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { logIn } from "../../store/users";
+import { useDispatch, useSelector } from "react-redux";
+import { getAuthErrors, logIn } from "../../store/users";
 
 const LoginForm = () => {
     const [data, setData] = useState({ email: "", passw: "", stayOn: true });
     const history = useHistory();
-    const [enterError, setEnterError] = useState(null);
+    // const [enterError, setEnterError] = useState(null);
+    const loginError = useSelector(getAuthErrors());
     const [errors, setErrors] = useState({});
     useEffect(() => validate(), [data]);
     const handleChange = (target) => {
         setData((prevState) => ({ ...prevState, [target.name]: target.value }));
-        setEnterError(null);
+        // setEnterError(null);
     };
-    // const { signIn } = useAuth();
+
     const dispatch = useDispatch();
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -25,13 +25,6 @@ const LoginForm = () => {
         const redirect = history.location.state ? history.location.state.from.pathname : "/";
         if (!isValid) return;
         dispatch(logIn({ payload: data, redirect }));
-
-        // try {
-        //     await signIn(data);
-        //     history.push(history.location.state ? history.location.state.from.pathname : "/");
-        // } catch (error) {
-        //     setEnterError(error.message);
-        // }
     };
     const isValid = Object.keys(errors).length === 0;
     const validatorConfig = {
@@ -74,12 +67,9 @@ const LoginForm = () => {
             <CheckBoxField value={data.stayOn} onChange={handleChange} name={"stayOn"}>
                 Remain Logged In
             </CheckBoxField>
-            {enterError && <p className="text-danger">{enterError}</p>}
-            <button
-                className="btn btn-primary w-100 mx-auto"
-                type="submit"
-                disabled={!isValid || enterError}
-            >
+            {loginError && <p className="text-danger">{loginError}</p>}
+
+            <button className="btn btn-primary w-100 mx-auto" type="submit" disabled={!isValid}>
                 Submit
             </button>
         </form>
