@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
-import { titleChanged, taskDeleted, completeTask, getTasks, loadTasks, getTasksLoadingStatus, taskAdded } from "./store/task";
+import { titleChanged, taskDeleted, completeTask, getTasks, loadTasks, getTasksLoadingStatus, createTask } from "./store/task";
 import configureStore from "./store/store";
 import { Provider, useSelector, useDispatch } from "react-redux";
 import { getError } from "./store/errors";
@@ -25,7 +25,7 @@ const App = (params) => {
     dispatch(taskDeleted(taskId));
   };
   const addTask = () => {
-    dispatch(taskAdded());
+    dispatch(createTask({ userId: 1, title: "task" + Date.now(), completed: false }));
   };
 
   if (isLoading) {
@@ -37,7 +37,7 @@ const App = (params) => {
   return (
     <>
       <h1>app</h1>
-      <button onClick={() => addTask()}>Add task</button>
+      <button onClick={addTask}>Add task</button>
       <ul>
         {state.map((el) => (
           <li key={el.id}>
