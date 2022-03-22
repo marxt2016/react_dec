@@ -55,6 +55,10 @@ const usersSlice = createSlice({
             state.isLoggedIn = false;
             state.auth = null;
             state.dataLoaded = false;
+        },
+        userUpdated: (state, action) => {
+            const index = state.entities.findIndex((u) => u._id === action.payload._id);
+            state.entities[index] = action.payload;
         }
     }
 });
@@ -67,12 +71,15 @@ const {
     authRequestSuccess,
     authRequestFailed,
     userCreated,
-    userLoggedOut
+    userLoggedOut,
+    userUpdated
 } = actions;
 
 const authRequested = createAction("users/authRequested");
 const userCreateRequested = createAction("users/userCreateRequested");
 const userCreateFailed = createAction("users/userCreateFailed");
+const userUpdateRequested = createAction("users/userUpdateRequested");
+const userUpdateFailed = createAction("users/userUpdateFailed");
 
 export const loadUsersList = () => async (dispatch, getState) => {
     dispatch(usersRequested());
@@ -122,13 +129,6 @@ export const signUp =
             dispatch(authRequestFailed(error.message));
         }
     };
-
-export const logOut = () => (dispatch) => {
-    localStorageService.removeAuthData();
-    dispatch(userLoggedOut());
-    history.push("/");
-};
-
 function createUser(payload) {
     return async function (dispatch) {
         dispatch(userCreateRequested());
@@ -145,6 +145,23 @@ function createUser(payload) {
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+export const updateUser = (payload) => async (dispatch) => {
+    dispatch(userUpdateRequested);
+    try {
+        const { content } = await userService.update(payload);
+        dispatch(userUpdated(content));
+        history.push(`/users/${content._id}`);
+    } catch (error) {
+        dispatch(userUpdateFailed(error.message));
+    }
+};
+export const logOut = () => (dispatch) => {
+    localStorageService.removeAuthData();
+    dispatch(userLoggedOut());
+    history.push("/");
+};
+
 export const getUsersList = () => (state) => state.users.entities;
 export const getCurrentUserData = () => (state) => {
     return state.users.entities
